@@ -8,15 +8,15 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
-require 'databaseconnection.php';
+require 'databaseconnection.php'; // Database connection
 
-// $action = $_POST['action'];
-
-if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id']) || $_POST['shipment_id'] === '')) {
+if (isset($_POST['action']) && isset($_POST['id'])) {
+   
     $id = $_POST['id'];
     $_SESSION['load_id'] = $id;
-    $shipment_id = $_POST['shipment_id'];
-    $action = $_POST['action']; // Uncomment this line to assign a value to $action
+    // $shipment_id = $_POST['shipment_id'];
+    $shipment_id = isset($_POST['shipment_id']) ? $_POST['shipment_id'] : ''; // Set shipment_id to an empty string if it is not set
+    $action = $_POST['action']; // Assign a value to $action
     
     if ($action == 'delete') {
         // Delete the row
@@ -26,8 +26,7 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
     } elseif ($action == 'edit') {
         // Update Load Details
         header("Location: updateload.php");
-    } elseif ($action == 'cancel'){             // Cancel Load Details
-        
+    } elseif ($action == 'cancel'){ // Cancel Load Details
         try {
         $conn->begin_transaction();
     
@@ -49,7 +48,6 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
             header ("Location: ../home.php");
             exit();
         }
-
     }elseif ($action == 'more') {
         // More of the row
         $sql = "SELECT * FROM loaddetails WHERE id = '$id'";
@@ -60,11 +58,6 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
         $sql2 = "SELECT * FROM shipment WHERE load_id = '$id'";
         $result2 = $conn->query($sql2);
         $row = mysqli_fetch_array($result2);
-
-        // $sql3 = "SELECT loaddetails.id, consignordetails.name, consignordetails.email, consignordetails.address, consignordetails.contact
-        // FROM consignordetails
-        // INNER JOIN shipment ON consignordetails.id = shipment.consignor_id
-        // WHERE shipment.load_id = '$id'";
 
         // Show more
         ?>
@@ -93,7 +86,6 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
             <?php
             //what to display
             if($_SESSION['usertype'] == "carrier"){
-                if ($_SESSION['usertype'] == "carrier") {
                     echo "
                     <div class='takenby description-more'>
                         <h3>Load By</h3>";
@@ -123,8 +115,6 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
                             echo '<li>Contact: '. $rowShip["contact"]. '</li>';
                             echo '</ul>';
                         }
-                    }
-                    
                     echo "</div>";
                 }
                 
@@ -173,6 +163,14 @@ if (isset($_POST['action']) && isset($_POST['id']) && (isset($_POST['shipment_id
                         echo '<li>Address: '. $rowShip["address"]. '</li>';
                         echo '<li>Contact: '. $rowShip["contact"]. '</li>';
                         echo '</ul>';
+                        echo "<div class='td-center'>
+                        <form action='' method='post' class='cancelBtn'>
+                            <input type='hidden' name='action' value='cancel'>
+                            <input type='hidden' name='id' value='" . $id . "'>
+                            <input type='hidden' name='shipment_id' value='" . $row['id'] . "'> <!--passing shipment id-->
+                            <button type='submit' name='cancel'>Cancel</button>
+                        </form>
+                    </div>";
                     }
                 }
                 
