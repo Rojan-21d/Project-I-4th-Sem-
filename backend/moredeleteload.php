@@ -14,7 +14,6 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
    
     $id = $_POST['id'];
     $_SESSION['load_id'] = $id;
-    // $shipment_id = $_POST['shipment_id'];
     $shipment_id = isset($_POST['shipment_id']) ? $_POST['shipment_id'] : ''; // Set shipment_id to an empty string if it is not set
     $action = $_POST['action']; // Assign a value to $action
     
@@ -175,10 +174,6 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                 }
                 
                 echo "</div>";
-                
-                
-                //With this change, the SQL query will be executed separately, and the results will be fetched and displayed properly.
-                
                 
                 echo "<div class='more-action description-more'>
                     <h3>Action</h3>
