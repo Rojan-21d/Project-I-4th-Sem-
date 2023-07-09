@@ -24,25 +24,17 @@ if ($result && $result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script> -->
     <link rel="stylesheet" href="css/headerfooterstyle.css">
     <title></title>
 </head>
 <body>
     <header>  
         <nav>
-        <div class="width-set">
-  <a href="home.php" class="logo-link">
-    <img class="logo" src="img/logowithbg.png" alt="logo">
-    <h1>GANTABYA</h1>
-  </a>
-</div>
-
-
-            <div class="width-set">
+            <a href="home.php">
+                <img class="logo" src="img/mainLogo2.png" alt="logo">
+            </a>
             <div class="nav__links">
-                    <img src="img/images/profile.png" onclick='toggleMenu()'>
-            </div>
+                    <img src="img/images/user-regular.png" onclick='toggleMenu()'>
             </div>
             
 
@@ -50,12 +42,12 @@ if ($result && $result->num_rows > 0) {
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
                     <div class="user-info">
-                        <img src="img/images/profile.png">
+                        <img src="img/images/user-regular.png">
                          <h2><?php echo $name;?></h2>
                     </div>
                     <hr>
                     <a href="profile.php" class="sub-menu-link">
-                        <img src="img/images/profile.png">
+                        <img src="img/images/user-regular.png">
                         <p>Profile</p>                      
                     </a>
                     <a href="home.php" class="sub-menu-link">

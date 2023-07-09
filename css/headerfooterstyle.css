@@ -19,32 +19,14 @@ nav{
     align-items: center;
     justify-content: space-between;
     background: #01896e;
-    padding: 5px 5%;
+    padding: .3rem 3rem;
 }
 
-.width-set {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo {
-    width: 50px; /* Adjust the width as needed */
+.logo {
+    width: 100px; /* Adjust the width as needed */
     height: auto; /* Maintain aspect ratio */
     margin-right: 10px; /* Adjust the margin as needed */
-  }
-  
-  h1 {
-    margin: 0;
-    color: #fff;
-  }
-  
-  .logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-  }
-  
-
+}
 
 .profileoption{
     display: flex;
@@ -55,11 +37,13 @@ nav{
     line-height: 36px;
 }
 
-
 .nav__links img{
     margin-top: 5px;
     width: 40px;
+    padding: 3px;
+    height: auto;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 /* dropdowncss */
@@ -157,3 +141,8 @@ footer {
     padding: 10px;
     text-align: center;
   }
+
+.adm-header a {
+    text-decoration: none;
+    color: #fff;
+}

@@ -1,10 +1,36 @@
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+require '../backend/databaseconnection.php';
+session_start();
+if(isset($_POST['login']))
+{
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+    $sql = "SELECT * FROM admininfo WHERE username = '$username' and password = '$password'";
+
+    $result = $conn->query($sql);
+    if($result->num_rows > 0){
+        $_SESSION['username'] = $username;
+        // Redirect to the admin panel page
+        header ("Location: adminpanel.php");
+        exit();
+    }else{
+        // Redirect to the same login page with an error message
+        header("Location: adminlogin.php?error=1");
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/login_reg.css">
+    <link rel="stylesheet" href="../css/login_reg.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/profile.css"> -->
     <title>Admin - Page</title>
 </head>
 <body>
@@ -18,7 +44,12 @@
     <div class="container">
         <div class="form-box">
             <h1>Admin Login</h1>
-            <form action= "adminbackend.php" method="post">
+            <?php if (isset($_GET['error'])) { ?>
+                <div class="error-message">
+                    Username or Password Invalid!
+                </div>
+            <?php } ?>
+            <form action= "" method="post">
                 <div class="input-field">
                     <i class="fa fa-user"></i> <!-- Assuming you have the Font Awesome library for icons -->
                     <input type="text" name="username" placeholder="Username" required>

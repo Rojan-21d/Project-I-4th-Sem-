@@ -80,7 +80,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif ($userselects == "consignor") {
         $updateSql = "UPDATE consignordetails SET name = '$name', contact = '$contact', email = '$email', address ='$address'";
         if (!empty($newPassword)) {
-            // // New password is provided, update the password field
+            // New password is provided, update the password field
+
             // $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
             // $updateSql .= ", password = '$hashedPassword'";
         

@@ -139,3 +139,12 @@ form a{
     color: #fff;
 }
 /* end */
+
+/* CSS for error message */
+.error-message {
+    background-color: #474846;
+    color: #ff8482;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 7px;
+  }
