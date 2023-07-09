@@ -3,6 +3,7 @@
 require '../backend/databaseconnection.php';
 require 'sqlFunc.php';
 require 'displayresult.php';
+require 'update.php';
 
 // Create an instance of the Select class
 $selectObj = new Select($conn); // Replace $conn with your database connection variable
@@ -39,12 +40,17 @@ $deleteObj = new Delete($conn);
 if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    // Call the deleteQueryById function with the correct table name
+    // Call the deleteQueryById function with table name and id
     $deleteResult = $deleteObj->deleteQueryById($table, $id);
 
     // Update the selected table after deleting the record
     $_SESSION['selected_table'] = $table;
 }
+
+// Create an instance of the Update class
+$updateObj = new Update($conn);
+
+if ()
 ?>
 <div class="admin-main">
     <div class="head-table">
