@@ -27,6 +27,7 @@ h1{
 h2 {
   color: #ffffff;
   text-align: center;
+  margin: .3rem;
 }
   
 .addForm {
@@ -81,4 +82,14 @@ button:hover{
 
 .button-input a{
   text-decoration: none;
+}
+
+/* CSS for error message */
+.error-message {
+  background-color: #474846;
+  color: #a94442;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #292929;
+  border-radius: 4px;
 }

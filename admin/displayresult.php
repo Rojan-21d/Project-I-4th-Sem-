@@ -36,12 +36,6 @@ function displayUser($result) {
                 }
             }
             echo "<td class='td-center'>                        
-                <form action='' method='post' class='moreBtn'>
-                <input type='hidden' name='action' value='edit'>
-                <input type='hidden' name='id' value='" . $id . "'>
-                <button type='submit'>Edit</button>
-                </form>
-                        
                 <form action='' method='post' class='deleteBtn'>
                     <input type='hidden' name='action' value='delete'>
                     <input type='hidden' name='id' value='" . $id . "'>

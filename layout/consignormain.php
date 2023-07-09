@@ -1,14 +1,11 @@
 <?php
 $sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "'";
-// $sql = "SELECT loaddetails.id, loaddetails.name, loaddetails.img_srcs, loaddetails.dateofpost, loaddetails.status
-// FROM loaddetails
-// INNER JOIN ";
 $result = $conn->query($sql);
 ?>
 <link rel="stylesheet" href="css/maincontentstyle.css">
 <div class="congmain">
     <form action="layout/addload.php" method="post" class="addForm">
-        <button>ADD</button>
+        <button type="submit" name="addLoad">ADD</button>
     </form>
     <div class="table-container">
         <div class="head">

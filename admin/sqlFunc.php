@@ -1,20 +1,4 @@
 <?php
-// require '../backend/databaseconnection.php';
-// class select{
-//     function selectQuery($tableName)
-//     {
-//         $sql="SELECT * FROM '$tableName'";
-//         $result=mysqli_query($conn,$sql);
-//         return $result;
-//         }
-// @override
-//     function selectQuery($tableName, $id){
-//         $sql = "SELECT * from `$tableName` WHERE id=$id ";
-//         $result = mysqli_query($conn, $sql);
-//         return $result;
-//     }
-// }
-
 require '../backend/databaseconnection.php';
 
 class Select {
@@ -51,5 +35,25 @@ class Delete {
     }
 }
 
+class Update {
+    protected $conn;
 
+    function __construct($connection) {
+        $this->conn = $connection;
+    }
+
+    function updateQuery($tableName, $data, $id) {
+        $updateValues = '';
+        foreach ($data as $column => $value) {
+            $value = mysqli_real_escape_string($this->conn, $value);
+            $updateValues .= "$column = '$value', ";
+        }
+        $updateValues = rtrim($updateValues, ', ');
+
+        $sql = "UPDATE $tableName SET $updateValues WHERE id = $id";
+        $result = mysqli_query($this->conn, $sql);
+        
+        return $result;
+    }
+}
 ?>
