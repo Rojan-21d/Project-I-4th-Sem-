@@ -194,6 +194,7 @@ html, body{
     text-align: center;
 }
 
+
 .congmain table{
     width: 95%;
     border-collapse: collapse;
@@ -205,7 +206,7 @@ th{
     background-color: #01896e;
 }
 
-h2, th{
+th{
     padding: .75rem .9375rem;
 }
 
