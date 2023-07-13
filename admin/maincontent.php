@@ -3,7 +3,7 @@
 require '../backend/databaseconnection.php';
 require 'sqlFunc.php';
 require 'displayresult.php';
-require 'update.php';
+// require 'update.php';
 
 // Create an instance of the Select class
 $selectObj = new Select($conn); // Replace $conn with your database connection variable
@@ -47,10 +47,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
     $_SESSION['selected_table'] = $table;
 }
 
-// Create an instance of the Update class
-$updateObj = new Update($conn);
+// // Create an instance of the Update class
+// $updateObj = new Update($conn);
 
-if ()
+// if ()
 ?>
 <div class="admin-main">
     <div class="head-table">

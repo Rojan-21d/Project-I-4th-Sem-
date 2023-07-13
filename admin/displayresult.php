@@ -20,7 +20,7 @@ function displayUser($result) {
         foreach ($columns as $column) {
             echo "<th>" . strtoupper($column) . "</th>";
         }        
-        echo "<th>Action</th>"; // Add a placeholder for the action column
+        echo "<th>ACTION</th>"; // Add a placeholder for the action column
         echo "</tr>";
 
         // Display table rows
