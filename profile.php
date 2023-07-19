@@ -8,7 +8,7 @@ if (!isset($_SESSION['email'])) {
 
 require 'backend/databaseconnection.php';
 include 'layout/header.php';
-$userselects = $_SESSION['usertype']; // Replace with your logic to determine the user type
+$userselects = $_SESSION['usertype']; 
 
 $errors = []; // Initialize an empty array to store validation errors
 
@@ -32,66 +32,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $address = $_POST['address'];
     $newPassword = $_POST['password'];
-    
-// // Validate form inputs
-// if (empty($name) || empty($email) || empty($contact) || empty($address)) {
-//     $errors[] = "All fields are required";
-// }
 
-// if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-//     $errors[] = "Invalid email format";
-// }
+    // Check if a new image is selected
+    if (!empty($_FILES['profile_pic']['name'])) {
+        // Upload the new image and get the file path
+        $upload_directory = 'img/uploads/';
+        $img_name = $_FILES['profile_pic']['name'];
+        $uploaded_file_path = $upload_directory . $img_name;
+        if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploaded_file_path)) {
+            // New image uploaded, update the image path in the database
+            $updateSql = "UPDATE ";
 
-// if (!empty($newPassword) && (strlen($newPassword) < 8 || strlen($newPassword) > 24)) {
-//     $errors[] = "Password must be between 8 and 24 characters";
-// }
+            if ($userselects == "carrier") {
+                $updateSql .= "carrierdetails SET img_srcs = '$uploaded_file_path'";
+            } elseif ($userselects == "consignor") {
+                $updateSql .= "consignordetails SET img_srcs = '$uploaded_file_path'";
+            }
 
-// if (!empty($contact) && strlen($contact) !== 10) {
-//     $errors[] = "Contact number must be exactly 10 digits";
-// }
+            // Add other fields to the update query
+            $updateSql .= ", name = '$name', contact = '$contact', email = '$email', address ='$address'";
 
+            if (!empty($newPassword)) {
+                // Update the password field if a new password is provided
+                $updateSql .= ", password = '$newPassword'";
+            }
 
+            $updateSql .= " WHERE id = " . $_SESSION['id'];
 
-//     // If there are errors, display them and stop further execution
-//     if (count($errors) > 0) {
-//         echo '<script>';
-//         foreach ($errors as $error) {
-//             echo 'alert("' . $error .'");';
-//         }
-//         echo 'window.location.href= "profile.php"';
-//         echo '</script>';
-//         // Stop further execution
-//         return;
-//     } else{
-    
-    // Update the corresponding table based on the user type
-    if ($userselects == "carrier") {
-        $updateSql = "UPDATE carrierdetails SET name = '$name', contact = '$contact', email = '$email', address ='$address'";
-        if (!empty($newPassword)) {
-            // New password is provided, update the password field
-            // $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            // $updateSql .= ", password = '$hashedPassword'";
-            
-            //$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);//$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            $updateSql .= ", password = '$newPassword'";
-
+        } else {
+            // Failed to upload the new image
+            // Redirect to the profile page with an error message
+            header("Location: profile.php?error=2");
+            exit;
         }
-        $updateSql .= " WHERE id = " . $_SESSION['id'];
-    } elseif ($userselects == "consignor") {
-        $updateSql = "UPDATE consignordetails SET name = '$name', contact = '$contact', email = '$email', address ='$address'";
-        if (!empty($newPassword)) {
-            // New password is provided, update the password field
+    } else {
+        // No new image selected, update other fields only
+        $updateSql = "UPDATE ";
 
-            // $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            // $updateSql .= ", password = '$hashedPassword'";
-        
-            //$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);//$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        if ($userselects == "carrier") {
+            $updateSql .= "carrierdetails SET";
+        } elseif ($userselects == "consignor") {
+            $updateSql .= "consignordetails SET";
+        }
+
+        // Add other fields to the update query
+        $updateSql .= " name = '$name', contact = '$contact', email = '$email', address ='$address'";
+
+        if (!empty($newPassword)) {
+            // Update the password field if a new password is provided
             $updateSql .= ", password = '$newPassword'";
         }
+
         $updateSql .= " WHERE id = " . $_SESSION['id'];
     }
 
     if ($conn->query($updateSql) === TRUE) {
+        // Update the session variables with the new values
+        $_SESSION['name'] = $name;
+        $_SESSION['email'] = $email;
+        $_SESSION['contact'] = $contact;
+        $_SESSION['address'] = $address;
+        // Update the session variable for the profile picture
+        $_SESSION['profilePic'] = $uploaded_file_path;
+
         // Redirect to the profile page with a success message
         header("Location: profile.php?success=1");
         exit;
@@ -101,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 }
-//}
 ?>
 
 <!DOCTYPE html>
@@ -123,9 +125,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Update failed!
             </div>
         <?php } ?>
-        <form action="" method="POST">
+        <form action="" method="POST" enctype="multipart/form-data">
             <div class="profile-picture">
-                <img src="profile_pic.jpg" alt="Profile Picture">
+                <img src="<?php echo $row['img_srcs']; ?>" alt="Profile Picture" id="profilePicPreview">
+                <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;">
+                <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
             </div>
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -149,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="text" id="password" name="password" placeholder="Enter new password">
+                <input type="password" id="password" name="password" placeholder="Enter new password">
                 <button type="button" class="edit-button" onclick="enableEdit('password')">Edit</button>
             </div>
 
@@ -163,6 +167,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function enableEdit(field) {
             document.getElementById(field).readOnly = false;
         }
+
+        function openFileInput() {
+            document.getElementById('profile_pic').click();
+        }
+
+        // Preview the selected image before uploading
+        document.getElementById('profile_pic').addEventListener('change', function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('profilePicPreview').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,23 +1,3 @@
-<?php
-$id = $_SESSION['id'];
-if ($_SESSION['usertype'] == "carrier"){
-$sql = "SELECT * FROM carrierdetails WHERE id = $id";
-}
-if ($_SESSION['usertype'] =="consignor"){
-    $sql = "SELECT * FROM consignordetails where id = $id";
-}
-$result = $conn->query($sql);
-$name = ''; // Initialize the variable with an empty value
-
-if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $name = $row['name'];
-} else {
-    $name = "Username";
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +5,6 @@ if ($result && $result->num_rows > 0) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/headerfooterstyle.css">
-    <title></title>
 </head>
 <body>
     <header>  
@@ -34,7 +13,7 @@ if ($result && $result->num_rows > 0) {
                 <img class="logo" src="img/mainLogo2.png" alt="logo">
             </a>
             <div class="nav__links">
-                    <img src="img/images/user-regular.png" onclick='toggleMenu()'>
+                    <img src="<?php echo $_SESSION['profilePic'] ?>" onclick='toggleMenu()'>
             </div>
             
 
@@ -42,12 +21,12 @@ if ($result && $result->num_rows > 0) {
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
                     <div class="user-info">
-                        <img src="img/images/user-regular.png">
-                         <h2><?php echo $name;?></h2>
+                        <img src="<?php echo $_SESSION['profilePic'] ?>">
+                         <h2><?php echo $_SESSION['name'];?></h2>
                     </div>
                     <hr>
                     <a href="profile.php" class="sub-menu-link">
-                        <img src="img/images/user-regular.png">
+                        <img src="<?php echo $_SESSION['profilePic'] ?>">
                         <p>Profile</p>                      
                     </a>
                     <a href="home.php" class="sub-menu-link">

@@ -47,9 +47,14 @@ if (isset($_POST['loginbtn'])) {
 
             // Store the id and email in session variables
             $_SESSION['id'] = $id;
+            $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $email;
+            $_SESSION['contact'] = $row['contact'];
+            $_SESSION['address'] = $row['address'];
+            $_SESSION['profilePic'] = $row['img_srcs'];
+            
             $_SESSION['usertype'] = $usertype;
-
+            
             // Redirect the user to the home page
             header("Location: home.php");
             exit;
@@ -68,8 +73,7 @@ if (isset($_POST['loginbtn'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/login_reg.css">
-    <script src="js/loginreg.js"></script>
+    <link rel="stylesheet" href="css/login.css">
     <title>Gantabya - Log in</title>
 </head>
 <body>
@@ -80,11 +84,11 @@ if (isset($_POST['loginbtn'])) {
             <div class="input-group-login" >
                     <div class="input-field " >
                         <i class="fa-solid fa-user"></i>
-                        <input type="email" placeholder="Email" name="email" >
+                        <input type="email" placeholder="Email *" name="email" required>
                     </div>
                     <div class="input-field ">
                         <i class="fa-solid fa-key"></i>
-                        <input type="password" placeholder="Password" name="password" >
+                        <input type="password" placeholder="Password *" name="password" required>
                     </div>     
                     <div class="error-hint hidden"><small>Email or Password Invalid.</small></div>
                 </div>          

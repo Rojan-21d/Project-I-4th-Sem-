@@ -49,10 +49,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
     $_SESSION['selected_table'] = $table;
 }
 
-// // Create an instance of the Update class
-// $updateObj = new Update($conn);
-
-// if ()
 ?>
 <div class="admin-main">
     <div class="head-table">

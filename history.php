@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="css/headerfooterstyle.css">
 <link rel="stylesheet" href="css/maincontentstyle.css">
 
-
+<title>History</title>
 <div class="congmain">
     <div class="table-container">
         <div class="head">

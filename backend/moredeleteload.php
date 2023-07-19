@@ -11,7 +11,6 @@ if (!isset($_SESSION['email'])) {
 require 'databaseconnection.php'; // Database connection
 
 if (isset($_POST['action']) && isset($_POST['id'])) {
-   
     $id = $_POST['id'];
     $_SESSION['load_id'] = $id;
     $shipment_id = isset($_POST['shipment_id']) ? $_POST['shipment_id'] : ''; // Set shipment_id to an empty string if it is not set
