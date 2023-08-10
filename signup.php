@@ -28,69 +28,73 @@ if (isset($_POST['signupBtn'])) {
 
     // ... Image upload validation ...
     if (!empty($_FILES['profile_pic']['name'])) {
+        $allowed_formats = array('jpg', 'jpeg', 'png');
         $upload_directory = 'img/uploads/';
         $img_name = $_FILES['profile_pic']['name'];
-        $uploaded_file_path = $upload_directory . $img_name;
-        if (!move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploaded_file_path)) {
-            echo '<script>
-            Swal.fire({
-                icon: "error",
-                title: "Image Upload Error",
-                text: "Error uploading the image.",
-            });
-        </script>';
-        return;
+        $img_extension = pathinfo($img_name, PATHINFO_EXTENSION);
+
+        // Validate the file extension
+        if (!in_array(strtolower($img_extension), $allowed_formats)) {
+            $errors[] = "Only JPG, JPEG, and PNG images are allowed.";
+        } else {
+            $uploaded_file_path = $upload_directory . $img_name;
+            if (!move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploaded_file_path)) {
+                $errors[] = "Error uploading the image.";
+            }
         }
     } else {
         $uploaded_file_path = 'img/images/user-regular.png';
     }
 
-    // ... Database connection ...
-    require 'backend/databaseconnection.php';
+    if (empty($errors)) {
 
-    // Prepare and execute the SQL query
-    $table = ($userselects === "carrier") ? "carrierdetails" : "consignordetails";
-    $sql = "INSERT INTO $table (name, img_srcs, email, contact, address, password) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
+        // ... Database connection ...
+        require 'backend/databaseconnection.php';
 
-    if (!$stmt) {
-        echo '<script>
-        Swal.fire({
-            icon: "error",
-            title: "Database Connection Error",
-            text: "Error in database connection.",
-        });
-    </script>';
-    return;
-    }
+        // Prepare and execute the SQL query
+        $table = ($userselects === "carrier") ? "carrierdetails" : "consignordetails";
+        $sql = "INSERT INTO $table (name, img_srcs, email, contact, address, password) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
 
-    // Sanitize user inputs
-    $name = mysqli_real_escape_string($conn, $name);
-    $email = mysqli_real_escape_string($conn, $email);
-    $contact = mysqli_real_escape_string($conn, $contact);
-    $address = mysqli_real_escape_string($conn, $address);
-    $password = mysqli_real_escape_string($conn, $password);
+        if (!$stmt) {
+            $errors[] = "Error in database connection.";
+        } else {
+            // Sanitize user inputs
+            $name = mysqli_real_escape_string($conn, $name);
+            $email = mysqli_real_escape_string($conn, $email);
+            $contact = mysqli_real_escape_string($conn, $contact);
+            $address = mysqli_real_escape_string($conn, $address);
+            $password = mysqli_real_escape_string($conn, $password);
 
-    //hashing password
+            // Hashing password
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    // Bind parameters and execute
-    $stmt->bind_param("ssssss", $name, $uploaded_file_path, $email, $contact, $address, $hashedPassword);
-    if ($stmt->execute()) {
-        header("Location: signup.php?success=1");
-        exit;
-    } else {
-        echo '<script>
-        Swal.fire({
-            icon: "error",
-            title: "Database Error",
-            text: "An error occurred while processing your request. Please try again later.",
-                });
-            </script>';       
+            // Bind parameters and execute
+            $stmt->bind_param("ssssss", $name, $uploaded_file_path, $email, $contact, $address, $hashedPassword);
+            if ($stmt->execute()) {
+                header("Location: signup.php?success=1");
+                exit;
+            } else {
+                $errors[] = "An error occurred while processing your request. Please try again later.";
+            }
+        }
     }
 }
+
+// Display errors using SweetAlert
+if (!empty($errors)) {
+    $errorMessages = join("\n", $errors);
+    echo '<script>
+    Swal.fire({
+        icon: "error",
+        title: "Sign Up Errors",
+        html: "' . $errorMessages . '",
+        showCloseButton: true,
+    });
+    </script>';
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +102,8 @@ if (isset($_POST['signupBtn'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
+    <script src="js/imageValidation.js"></script>
     
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/registration.css">
@@ -166,7 +171,8 @@ if (isset($_POST['signupBtn'])) {
                         <div class="input-group">
                             <div class="input-field">
                                 <i class="fa-solid fa-image left"></i>
-                                <input type="file" placeholder="Your Photo" name="profile_pic" id="profile_pic" accept="image/*">
+                                <input type="file"  name="profile_pic" id="profile_pic" accept="image/*">
+                                <!-- <input type="file" id="profile_pic" name="profile_pic"> -->
                             </div>
                         </div>
                         <div class="user-selects">
@@ -191,7 +197,7 @@ if (isset($_POST['signupBtn'])) {
         </div>
     </div>
     <script src="js/imgPreview.js"></script>
-    <script src="js/validation.js"></script>
+    <script src="js/formValidation.js"></script>
     <script src="js/showpwd.js"></script>
 </body>
 </html>

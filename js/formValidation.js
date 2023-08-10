@@ -1,3 +1,4 @@
+
 // Client-side validation function with SweetAlert integration
 function validateForm() {
     var errors = [];
@@ -7,26 +8,27 @@ function validateForm() {
     var phone = document.getElementById("phone").value;
     
     if (name === "") {
-        errors.push("Name is required.");
+        errors.push("Form js: Name is required.");
     }
     
     if (email === "") {
-        errors.push("Email is required.");
+        errors.push("Form js: Email is required.");
     } else if (!validateEmail(email)) {
-        errors.push("Invalid email format.");
+        errors.push("Form js: Invalid email format.");
     }
     
     if (password === "") {
-        errors.push("Password is required.");
+        errors.push("Form js: Password is required.");
     } else if (password.length < 8 || password.length > 24) {
-        errors.push("Password must be between 8 and 24 characters.");
+        errors.push("Form js: Password must be between 8 and 24 characters.");
     }
     
     if (phone === "") {
-        errors.push("Phone number is required.");
+        errors.push("Form js: Phone number is required.");
     } else if (phone.length !== 10) {
-        errors.push("Phone number must be 10 digits.");
+        errors.push("Form js: Phone number must be 10 digits.");
     }
+    
     // Display errors using SweetAlert with bullet points
     if (errors.length > 0) {
         var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
@@ -41,8 +43,9 @@ function validateForm() {
     
     return true;
 }
+
 // Email validation function
 function validateEmail(email) {
-var re = /\S+@\S+\.\S+/;
-return re.test(email);
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
 }

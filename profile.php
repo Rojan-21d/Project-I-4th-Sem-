@@ -128,6 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/sweetAlert.css">
+    <script src="js/imageValidation.js"></script>
+
     <script>
         document.querySelector('form').addEventListener('submit', function (event) {
             if (!validateForm()) {
