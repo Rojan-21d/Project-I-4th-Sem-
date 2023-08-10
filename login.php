@@ -1,8 +1,12 @@
 <?php
-//checking if user is already loged in
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
+
+// Checking if user is already logged in
 if(isset($_SESSION['email'])){
-    //Redirect user to home page
+    // Redirect user to home page
     header ("Location: home.php");
     exit;    
 }
@@ -18,39 +22,48 @@ if (isset($_POST['loginbtn'])) {
     
     // Checking userselects
     if ($userselects == "carrier") {
-        $sql = "SELECT * FROM carrierdetails WHERE email = '$email' and password = '$password'";
+        $sql = "SELECT * FROM carrierdetails WHERE email = ?";
     } elseif ($userselects == "consignor") {     
-        $sql = "SELECT * FROM consignordetails WHERE email = '$email' and password = '$password'";
+        $sql = "SELECT * FROM consignordetails WHERE email = ?";
     }
-    
-    $result = $conn->query($sql);
+
+    // Using prepared statements to prevent SQL injection
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     if ($result->num_rows > 0) {
-        // Fetch the row and store id and email values
         $row = $result->fetch_assoc();
-        $id = $row['id'];
-        $email = $row['email'];
-        $usertype = $userselects;
-        
-        // Store the id and email in session variables
-        $_SESSION['id'] = $id;
-        $_SESSION['name'] = $row['name'];
-        $_SESSION['email'] = $email;
-        $_SESSION['contact'] = $row['contact'];
-        $_SESSION['address'] = $row['address'];
-        $_SESSION['profilePic'] = $row['img_srcs'];
-        
-        $_SESSION['usertype'] = $usertype;
-        
-        // Redirect the user to the home page
-        header("Location: home.php");
-        exit;
+        $hashedPassword = $row['password'];
+
+        // Verify the hashed password
+        if (password_verify($password, $hashedPassword)) {
+            // Password is correct, set session variables
+            $_SESSION['id'] = $row['id'];
+            $_SESSION['name'] = $row['name'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['contact'] = $row['contact'];
+            $_SESSION['address'] = $row['address'];
+            $_SESSION['profilePic'] = $row['img_srcs'];
+            $_SESSION['usertype'] = $userselects;
+
+            // Redirect the user to the home page
+            header("Location: home.php");
+            exit;
+        } else {
+            // Password is incorrect
+            header("Location: login.php?errorPassword=1");
+            exit;
+        }
     } else {        
-        // Redirect to the same login page with an error message
-        header("Location: login.php?error=1");
+        // Incorrect email
+        header("Location: login.php?errorEmail=1");
         exit;
     }
 }    
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -66,9 +79,14 @@ if (isset($_POST['loginbtn'])) {
     <div class="container"> 
         <div class="form-box">
             <h1>Log In</h1>  
-            <?php if (isset($_GET['error'])) { ?>
+            <?php if (isset($_GET['errorEmail'])) { ?>
                 <div class="error-message">
-                    Username or Password Invalid!
+                    User Not Found!
+                </div>
+            <?php } 
+                if (isset($_GET['errorPassword'])) { ?>
+                <div class="error-message">
+                    Password Invalid!
                 </div>
             <?php } ?>       
             <form method="post" action="" class="login">
@@ -102,7 +120,7 @@ if (isset($_POST['loginbtn'])) {
                     <button type="submit" name="loginbtn" value="login">Log In</button>
                 </div> 
                 
-                <small><a href="signup.php"> Sign Up Here!</a> </small>
+                <small><a href="signup.php">Sign Up Here!</a> </small>
                 
             </form>
         </div>    

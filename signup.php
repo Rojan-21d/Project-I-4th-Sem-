@@ -71,8 +71,12 @@ if (isset($_POST['signupBtn'])) {
     $address = mysqli_real_escape_string($conn, $address);
     $password = mysqli_real_escape_string($conn, $password);
 
+    //hashing password
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
     // Bind parameters and execute
-    $stmt->bind_param("ssssss", $name, $uploaded_file_path, $email, $contact, $address, $password);
+    $stmt->bind_param("ssssss", $name, $uploaded_file_path, $email, $contact, $address, $hashedPassword);
     if ($stmt->execute()) {
         header("Location: signup.php?success=1");
         exit;
@@ -81,9 +85,9 @@ if (isset($_POST['signupBtn'])) {
         Swal.fire({
             icon: "error",
             title: "Database Error",
-            text: "Error in database query: ' . mysqli_error($conn) . '",
-        });
-        </script>';    
+            text: "An error occurred while processing your request. Please try again later.",
+                });
+            </script>';       
     }
 }
 ?>
