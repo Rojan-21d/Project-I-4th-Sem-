@@ -66,6 +66,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
                 $sql = "SELECT * FROM `$table`";
                 $result = mysqli_query($conn, $sql);
                 // displayUser($result);
+                
                 // function displayUser($result) {
                     if ($result && mysqli_num_rows($result) > 0) {
                 

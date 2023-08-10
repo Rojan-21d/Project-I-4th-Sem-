@@ -64,6 +64,51 @@ body {
     margin-top: 20px; /* Added margin for space between logo and inputs */
 }
 
+/* .input-group {
+    background: #7dcabb;
+    margin: 15px 0;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+}
+
+.input-group .input-field {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center; 
+}
+
+.input-group .input-field input {
+    border-radius: 13px;
+    max-height: 3.2rem;
+    width: 90%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 18px 15px;
+    padding-left: 40px;
+}
+
+.input-group .input-field .input-label {
+    flex: 1;
+    padding-left: 15px;
+    color: #5a5252;
+}
+
+.input-group .input-field i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #5a5252;
+}
+
+.input-group .input-field .fa-eye {
+    cursor: pointer;
+} */
+
+
 .input-group {
     background: #7dcabb;
     margin: 15px 0;
@@ -75,19 +120,22 @@ body {
 .input-group .input-field {
     flex: 1;
     position: relative;
+    display: flex;
+    align-items: center; 
 }
 
 .input-group .input-field input {
+    border-radius: 13px;
     max-height: 3.2rem;
-    width: 100%;
+    width: 100%; /* Adjusted width to take up full space */
     background: transparent;
     border: none;
     outline: none;
     padding: 18px 15px;
-    padding-left: 40px; /* Increased left padding for space between icon and input */
+    padding-left: 40px;
 }
 
-.input-group .input-field i {
+.input-group .input-field i.left {
     position: absolute;
     top: 50%;
     left: 15px;
@@ -95,12 +143,15 @@ body {
     color: #5a5252;
 }
 
-.input-group .input-field img {
-    max-width: 230px; /* Increased size for a bigger image */
-    max-height: 230px; /* Increased size for a bigger image */
-    display: block;
-    margin-top: 10px;
+.input-group .input-field i.fa-eye {
+    position: absolute;
+    top: 50%;
+    right: 15px; /* Positioned on the right side */
+    transform: translateY(-50%);
+    color: #5a5252;
+    cursor: pointer;
 }
+
 
 /* Added new style for Contact and Address input fields */
 .input-group .input-field:nth-child(4),

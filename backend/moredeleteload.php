@@ -4,10 +4,9 @@ session_start();
 // Check if the user is not logged in
 if (!isset($_SESSION['email'])) {
     // Redirect the user to the login page or any other authentication page
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
-
 require 'databaseconnection.php'; // Database connection
 
 if (isset($_POST['action']) && isset($_POST['id'])) {
@@ -68,8 +67,6 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         </div>
         <div class="more">
         <img src="../<?php echo $more['img_srcs']; ?>" alt="Image" class="more-img">
-
-
             <div class="description-more">
                 <h3><?php echo $more['name']; ?></h3>
                 <ul>
@@ -195,7 +192,6 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         </div>
 
         <?php
-        
     }
 }
 

@@ -6,7 +6,6 @@ $sql = "SELECT ld.*, cd.name AS consignor_name, cd.img_srcs AS consignor_img, cd
         JOIN consignordetails cd ON ld.consignor_id = cd.id
         WHERE ld.status = 'notBooked'";
 $result = $conn->query($sql);
-
 ?>
 
 <!DOCTYPE html>

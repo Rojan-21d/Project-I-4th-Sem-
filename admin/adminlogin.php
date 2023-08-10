@@ -13,6 +13,9 @@ if(isset($_POST['login']))
     $result = $conn->query($sql);
     if($result->num_rows > 0){
         $_SESSION['username'] = $username;
+
+        // For logout Purpose
+        $_SESSION['admin'] = 1;
         // Redirect to the admin panel page
         header ("Location: adminpanel.php");
         exit();
@@ -29,17 +32,10 @@ if(isset($_POST['login']))
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../css/login_reg.css">
-    <!-- <link rel="stylesheet" type="text/css" href="../css/profile.css"> -->
-    <title>Admin - Page</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <title>Admin login</title>
 </head>
 <body>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Login</title>
-    <link rel="stylesheet" type="text/css" href="style.css"> <!-- Assuming you have a separate CSS file -->
-</head>
 <body>
     <div class="container">
         <div class="form-box">
@@ -51,7 +47,7 @@ if(isset($_POST['login']))
             <?php } ?>
             <form action= "" method="post">
                 <div class="input-field">
-                    <i class="fa fa-user"></i> <!-- Assuming you have the Font Awesome library for icons -->
+                    <i class="fa fa-user"></i>
                     <input type="text" name="username" placeholder="Username" required>
                 </div>
                 <div class="input-field">

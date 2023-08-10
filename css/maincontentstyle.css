@@ -219,6 +219,7 @@ table tr:hover{
 }
 
 .headdetails{
+    margin: 2rem;
     text-align: center;
     color: #01896e;
 }

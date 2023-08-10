@@ -5,6 +5,16 @@
     box-sizing: border-box;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    /* Your CSS styling here */
+    background-color: #7dcabb; /* Override the auto-fill background color */
+    color: #333; /* Change the text color */
+    border: none;
+}
+
 .container{
     width: 100%;
     height: 100vh;
@@ -41,32 +51,54 @@
     border-radius: 13px;
     display: flex;
     align-items: center;
+    flex: 1;
+    position: relative;
+    /* justify-content: space-between; */
 }
 
 input{
-    width: 100%;
+    /* width: 75%;
+    background: transparent;
+    /* margin-right: 65px; */
+    /* border: none;
+    outline: none;
+    padding: 18px 15px;  */
+    border-radius: 13px;
+    max-height: 3.2rem;
+    width: 100%; /* Adjusted width to take up full space */
     background: transparent;
     border: none;
     outline: none;
     padding: 18px 15px;
+    padding-left: 40px;
 }
 
-
-
-.input-field i{
-    margin-left: 15px;
+.input-field .fa-solid{
+    /* margin-left: 15px; */
+    position: absolute;
+    top: 50%;
+    right: 338px;
+    transform: translateY(-50%);
     color: #5a5252;
 }
 
-.error-hint{
-    color: red;
+.input-field i{
+    /* color: #5a5252;
+    min-width: 30px;
+    height: auto; */
+    position: absolute;
+    top: 50%;
+    right: 15px; /* Positioned on the right side */
+    transform: translateY(-50%);
+    color: #5a5252;
+    cursor: pointer;
+    /* border: 1px solid red; */
+    /* margin: 0 5px; */
 }
 
-.invalid{
-    border: 1px solid red;
-}
-.hidden{
-    display: none;
+.input-field .fa-regular{
+    /* margin-left: -67px;  */
+    cursor: pointer;
 }
 
 form a{

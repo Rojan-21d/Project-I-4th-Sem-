@@ -1,4 +1,6 @@
 <?php
+$errors = array(); // A single array to store all validation errors
+
 if (isset($_POST['signupBtn'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
@@ -6,8 +8,6 @@ if (isset($_POST['signupBtn'])) {
     $address = $_POST['address'];
     $password = $_POST['password'];
     $userselects = $_POST['userselects'];
-    
-    $errors = array(); // A single array to store all validation errors
 
     // Validate form inputs
     if (empty($name) || empty($email) || empty($contact) || empty($address) || empty($password)) {
@@ -26,21 +26,26 @@ if (isset($_POST['signupBtn'])) {
         $errors[] = "Contact Number Length must be 10";
     }
 
-    // If no errors, move the uploaded image file to the desired location
+    // ... Image upload validation ...
     if (!empty($_FILES['profile_pic']['name'])) {
-        $upload_directory = 'img/uploads/'; // Replace 'uploads/' with the desired upload directory.
+        $upload_directory = 'img/uploads/';
         $img_name = $_FILES['profile_pic']['name'];
         $uploaded_file_path = $upload_directory . $img_name;
         if (!move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploaded_file_path)) {
-            echo '<script>alert("Error uploading the image.");</script>';
-            return;
+            echo '<script>
+            Swal.fire({
+                icon: "error",
+                title: "Image Upload Error",
+                text: "Error uploading the image.",
+            });
+        </script>';
+        return;
         }
     } else {
-        // If no image is selected, set 'img_srcs' to the default value
         $uploaded_file_path = 'img/images/user-regular.png';
     }
 
-    // Database connection
+    // ... Database connection ...
     require 'backend/databaseconnection.php';
 
     // Prepare and execute the SQL query
@@ -49,21 +54,39 @@ if (isset($_POST['signupBtn'])) {
     $stmt = $conn->prepare($sql);
 
     if (!$stmt) {
-        echo '<script>alert("Error in database connection.");</script>';
-        return;
+        echo '<script>
+        Swal.fire({
+            icon: "error",
+            title: "Database Connection Error",
+            text: "Error in database connection.",
+        });
+    </script>';
+    return;
     }
 
+    // Sanitize user inputs
+    $name = mysqli_real_escape_string($conn, $name);
+    $email = mysqli_real_escape_string($conn, $email);
+    $contact = mysqli_real_escape_string($conn, $contact);
+    $address = mysqli_real_escape_string($conn, $address);
+    $password = mysqli_real_escape_string($conn, $password);
+
+    // Bind parameters and execute
     $stmt->bind_param("ssssss", $name, $uploaded_file_path, $email, $contact, $address, $password);
     if ($stmt->execute()) {
-        echo '<script>alert("Signup Sucessfully");</script>';
-        header('Location: login.php');
+        header("Location: signup.php?success=1");
         exit;
     } else {
-        echo '<script>alert("Error in database query: ' . mysqli_error($conn) . '");</script>';
+        echo '<script>
+        Swal.fire({
+            icon: "error",
+            title: "Database Error",
+            text: "Error in database query: ' . mysqli_error($conn) . '",
+        });
+        </script>';    
     }
 }
 ?>
-<!-- Rest of the HTML code remains the same -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -71,19 +94,32 @@ if (isset($_POST['signupBtn'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/registration.css">
-    <!-- <script src="js/imgPreview.js"></script> -->
-    <!-- <script src="js/validation.js"></script> -->
-
+    <link rel="stylesheet" href="css/sweetAlert.css">
     <title>Gantabya - Sign up</title>
 </head>
 <body>
-    <div class="container"> 
+    <div class="container">
         <div class="form-box">
             <div class="topic">
                 <h1>Sign Up</h1>
             </div>
+            <?php if (isset($_GET['success'])) { ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        Swal.fire({
+                            title: 'Signup Successful!',
+                            showConfirmButton: true
+                        }).then(function() {
+                            window.location.href = 'login.php';
+                        });
+                    });
+                    </script>
+            <?php } ?> 
+
             <div class="content">
                 <div class="logo-section">
                     <div class="logo">
@@ -91,40 +127,41 @@ if (isset($_POST['signupBtn'])) {
                     </div>
                 </div>
                 <div class="input-section">
-                <form method="post" action="" class="login" enctype="multipart/form-data" > <!-- Added enctype for file upload -->
+                    <form method="post" action="" class="login" enctype="multipart/form-data" onsubmit="return validateForm();">
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-solid fa-user"></i>
-                                <input type="text" placeholder="Name *" name="name" id="name" value="<?php echo isset($name) ? $name : ''; ?>" required>
+                                <i class="fa-solid fa-user left"></i>
+                                <input type="text" placeholder="Name *" name="name" id="name" required>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-solid fa-envelope"></i>
-                                <input type="email" placeholder="Email *" name="email" id="email" value="<?php echo isset($email) ? $email : ''; ?>" required>
+                                <i class="fa-solid fa-envelope left"></i>
+                                <input type="email" placeholder="Email *" name="email" id="email" required>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-solid fa-key"></i>
-                                <input type="password" placeholder="Password *" name="password" password="password" required>
+                                <i class="fa-solid fa-key left"></i>
+                                <input type="password" placeholder="Password *" name="password" id="password" required>
+                                <i class="fa-regular fa-eye" id="togglePassword"></i>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-solid fa-phone"></i>
-                                <input type="text" placeholder="Phone *" name="phone" id="phone" value="<?php echo isset($phone) ? $phone : ''; ?>" required>
+                                <i class="fa-solid fa-phone left"></i>
+                                <input type="text" placeholder="Phone *" name="phone" id="phone" required>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-regular fa-address-card"></i>
-                                <input type="text" placeholder="Address *" name="address" id="address" value="<?php echo isset($address) ? $address : ''; ?>" required>
+                                <i class="fa-regular fa-address-card left"></i>
+                                <input type="text" placeholder="Address *" name="address" id="address" required>
                             </div>
                         </div>
                         <div class="input-group">
                             <div class="input-field">
-                                <i class="fa-solid fa-image"></i>
+                                <i class="fa-solid fa-image left"></i>
                                 <input type="file" placeholder="Your Photo" name="profile_pic" id="profile_pic" accept="image/*">
                             </div>
                         </div>
@@ -149,5 +186,8 @@ if (isset($_POST['signupBtn'])) {
             </div>
         </div>
     </div>
+    <script src="js/imgPreview.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/showpwd.js"></script>
 </body>
 </html>
