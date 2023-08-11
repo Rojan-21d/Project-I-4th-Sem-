@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 $errors = []; // Array to store validation errors
 
@@ -10,11 +13,11 @@ if (!isset($_SESSION['email'])) {
 
 require 'backend/databaseconnection.php';
 include 'layout/header.php';
-$userselects = $_SESSION['usertype'];
+$userSelects = $_SESSION['usertype'];
 
-if ($userselects == "carrier") {
+if ($userSelects == "carrier") {
     $sql = "SELECT * FROM carrierdetails WHERE id = '" . $_SESSION['id'] . "'";
-} elseif ($userselects == "consignor") {
+} elseif ($userSelects == "consignor") {
     $sql = "SELECT * FROM consignordetails WHERE id = '" . $_SESSION['id'] . "'";
 }
 
@@ -54,48 +57,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_FILES['profile_pic']['name'])) {
             // Validate and process the image upload
             $allowedExtensions = ['jpg', 'jpeg', 'png'];
-            $upload_directory = 'img/uploads/';
-
-            $img_name = $_FILES['profile_pic']['name'];
-            $img_extension = pathinfo($img_name, PATHINFO_EXTENSION);
-
-            if (!in_array($img_extension, $allowedExtensions)) {
+            $uploadDirectory = 'img/uploads/';
+        
+            $imgName = $_FILES['profile_pic']['name'];
+            $imgExtension = pathinfo($imgName, PATHINFO_EXTENSION);
+        
+            if (!in_array($imgExtension, $allowedExtensions)) {
                 $errors[] = "Invalid image format. Allowed formats: JPG, JPEG, PNG.";
             } else {
                 // Upload the new image and get the file path
-                $uploaded_file_path = $upload_directory . uniqid() . '.' . $img_extension;
-
-                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploaded_file_path)) {
-                    // Update the image path in the database
-                    if ($userselects == "carrier") {
-                        $updateSql = "UPDATE carrierdetails SET img_srcs = '$uploaded_file_path'";
-                    } elseif ($userselects == "consignor") {
-                        $updateSql = "UPDATE consignordetails SET img_srcs = '$uploaded_file_path'";
+                $uploadedFilePath = $uploadDirectory . $imgName;
+        
+                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploadedFilePath)) {
+                    // Image uploaded successfully, prepare to update database
+                    if ($userSelects == "carrier") {
+                        $updateSql = "UPDATE carrierdetails SET img_srcs = '$uploadedFilePath'";
+                    } elseif ($userSelects == "consignor") {
+                        $updateSql = "UPDATE consignordetails SET img_srcs = '$uploadedFilePath'";
                     }
                 } else {
                     // Failed to upload the new image
                     // Redirect to the profile page with an error message
-                    header("Location: profile.php?error=2");
+                    // header("Location: profile.php?error=2");
+                    // Redirect to the profile page with a specific error message
+                    header("Location: profile.php?error=imageUploadError");
                     exit;
                 }
             }
         } else {
             // No new image selected, update other fields only
-            if ($userselects == "carrier") {
+            if ($userSelects == "carrier") {
                 $updateSql = "UPDATE carrierdetails SET";
-            } elseif ($userselects == "consignor") {
+            } elseif ($userSelects == "consignor") {
                 $updateSql = "UPDATE consignordetails SET";
             }
         }
-
+        
         // Add other fields to the update query
-        $updateSql .= " name = '$name', contact = '$contact', email = '$email', address ='$address'";
-
+        $updateSql .= ", name = '$name', contact = '$contact', email = '$email', address = '$address'";
+        
         if (!empty($newPassword)) {
             // Update the password field if a new password is provided
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
             $updateSql .= ", password = '$hashedPassword'";
         }
+        
+        // Complete the update query
         $updateSql .= " WHERE id = " . $_SESSION['id'];
 
         if ($conn->query($updateSql) === TRUE) {
@@ -105,17 +112,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['contact'] = $contact;
             $_SESSION['address'] = $address;
             // Update the session variable for the profile picture
-            if (!empty($uploaded_file_path)) {
-                $_SESSION['profilePic'] = $uploaded_file_path;
+            if (!empty($uploadedFilePath)) {
+                $_SESSION['profilePic'] = $uploadedFilePath;
             }
+            
             // Redirect to the profile page with a success message
             header("Location: profile.php?success=1");
             exit;
         } else {
             // Redirect to the profile page with an error message
-            header("Location: profile.php?error=1");
+            // header("Location: profile.php?error=1");
+            // Redirect to the profile page with a specific error message
+            header("Location: profile.php?error=db_update_failed");
             exit;
         }
+    } // Display errors using SweetAlert
+    else if (!empty($errors)) {
+        $errorMessages = join("\n", $errors);
+        echo '<script>
+        Swal.fire({
+            icon: "error",
+            title: "Sign Up Errors",
+            html: "' . $errorMessages . '",
+            showCloseButton: true,
+        });
+        </script>';
     }
 }
 ?>
@@ -128,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/sweetAlert.css">
     <script src="js/imageValidation.js"></script>
-
+    <script src="js/imgPreview.js"></script>
     <script>
             document.querySelector('form').addEventListener('submit', function (event) {
                 if (!validateForm()) {
@@ -195,17 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('profile_pic').click();
         }
 
-        // Preview the selected image before uploading
-        document.getElementById('profile_pic').addEventListener('change', function () {
-            var file = this.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    document.getElementById('profilePicPreview').src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        
     </script>    
 </head>
 <body>
@@ -222,42 +233,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         <?php } ?>
         <form action="" method="POST" onsubmit="return validateForm();" enctype="multipart/form-data">
-            <div class="profile-picture">
-                <img src="<?php echo $row['img_srcs']; ?>" alt="Profile Picture" id="profilePicPreview">
-                <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;">
-                <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
-            </div>
-
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" value="<?php echo isset($row['name']) ? $row['name'] : ''; ?>" readonly>
-                <button type="button" class="edit-button" onclick="enableEdit('name')">Edit</button>
-            </div>
-            <div class="form-group">
-                <label for="contact">Contact:</label>
-                <input type="text" id="contact" name="contact" value="<?php echo isset($row['contact']) ? $row['contact'] : ''; ?>" readonly>
-                <button type="button" class="edit-button" onclick="enableEdit('contact')">Edit</button>
-            </div>
-            <div class="form-group">
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" value="<?php echo isset($row['address']) ? $row['address'] : ''; ?>" readonly>
-                <button type="button" class="edit-button" onclick="enableEdit('address')">Edit</button>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? $row['email'] : ''; ?>" readonly>
-                <button type="button" class="edit-button" onclick="enableEdit('email')">Edit</button>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter new password">
-                <button type="button" class="edit-button" onclick="enableEdit('password')">Edit</button>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Save Changes">
-            </div>
-        </form>
-    </div>
+        <div class="profile-picture">
+            <img src="<?php echo $row['img_srcs']; ?>" alt="Profile Picture" id="profilePicPreview">
+            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;" onchange="previewImage(event)">
+            <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
+        </div>       
+        
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="<?php echo isset($row['name']) ? $row['name'] : ''; ?>" readonly>
+            <button type="button" class="edit-button" onclick="enableEdit('name')">Edit</button>
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" name="contact" value="<?php echo isset($row['contact']) ? $row['contact'] : ''; ?>" readonly>
+            <button type="button" class="edit-button" onclick="enableEdit('contact')">Edit</button>
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="<?php echo isset($row['address']) ? $row['address'] : ''; ?>" readonly>
+            <button type="button" class="edit-button" onclick="enableEdit('address')">Edit</button>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? $row['email'] : ''; ?>" readonly>
+            <button type="button" class="edit-button" onclick="enableEdit('email')">Edit</button>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter new password">
+            <button type="button" class="edit-button" onclick="enableEdit('password')">Edit</button>
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Save Changes">
+        </div>
+    </form>
+</div>
+    
 </body>
 </html>
+
+            
