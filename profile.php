@@ -108,7 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($uploaded_file_path)) {
                 $_SESSION['profilePic'] = $uploaded_file_path;
             }
-
             // Redirect to the profile page with a success message
             header("Location: profile.php?success=1");
             exit;
@@ -131,62 +130,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="js/imageValidation.js"></script>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function (event) {
-            if (!validateForm()) {
-                event.preventDefault();
-            }
-        });
-
-// Client-side validation function with SweetAlert integration
-function validateForm() {
-            var errors = [];
-            var name = document.getElementById("name").value;
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-            var phone = document.getElementById("contact").value; // Corrected ID
-
-            if (name === "") {
-                errors.push("Name is required.");
-            }
-
-            if (email === "") {
-                errors.push("Email is required.");
-            } else if (!validateEmail(email)) {
-                errors.push("Invalid email format.");
-            }
-
-            if (password !== "") { // Check if password is provided
-                if (password.length < 8 || password.length > 24) {
-                    errors.push("Password must be between 8 and 24 characters.");
+            document.querySelector('form').addEventListener('submit', function (event) {
+                if (!validateForm()) {
+                    event.preventDefault();
                 }
+            });
+            
+            // Client-side validation function with SweetAlert integration
+            function validateForm() {
+                var errors = [];
+                var name = document.getElementById("name").value;
+                var email = document.getElementById("email").value;
+                var password = document.getElementById("password").value;
+                var phone = document.getElementById("contact").value; // Corrected ID
+                
+                if (name === "") {
+                    errors.push("Name is required.");
+                }
+                
+                if (email === "") {
+                    errors.push("Email is required.");
+                } else if (!validateEmail(email)) {
+                    errors.push("Invalid email format.");
+                }
+                
+                if (password !== "") { // Check if password is provided
+                    if (password.length < 8 || password.length > 24) {
+                        errors.push("Password must be between 8 and 24 characters.");
+                    }
+                }
+                
+                if (phone === "") {
+                    errors.push("Phone number is required.");
+                } else if (phone.length !== 10) {
+                    errors.push("Phone number must be 10 digits.");
+                }
+                
+                // Display errors using SweetAlert with bullet points
+                if (errors.length > 0) {
+                    var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Update Error',
+                        html: errorMessage,
+                        showCloseButton: true,
+                    });
+                    
+                    return false; // Prevent form submission
+                }
+                
+                return true; // Allow form submission
             }
-
-            if (phone === "") {
-                errors.push("Phone number is required.");
-            } else if (phone.length !== 10) {
-                errors.push("Phone number must be 10 digits.");
+            
+            function validateEmail(email) {
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
             }
-
-            // Display errors using SweetAlert with bullet points
-            if (errors.length > 0) {
-                var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Update Error',
-                    html: errorMessage,
-                    showCloseButton: true,
-                });
-
-                return false; // Prevent form submission
-            }
-
-            return true; // Allow form submission
-        }
-
-        function validateEmail(email) {
-            var re = /\S+@\S+\.\S+/;
-            return re.test(email);
-        }
 
         function enableEdit(field) {
             document.getElementById(field).readOnly = false;
@@ -207,11 +206,11 @@ function validateForm() {
                 reader.readAsDataURL(file);
             }
         });
-    </script>
+    </script>    
 </head>
 <body>
-    <div class="container">
-        <h1>Your Profile</h1>
+<div class="container">
+    <h1>Your Profile</h1>
         <a href="home.php" class="back-button">Back</a>
         <?php if (isset($_GET['success'])) { ?>
             <div class="success-message">
@@ -228,6 +227,7 @@ function validateForm() {
                 <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;">
                 <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
             </div>
+
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" value="<?php echo isset($row['name']) ? $row['name'] : ''; ?>" readonly>

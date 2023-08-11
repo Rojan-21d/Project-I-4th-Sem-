@@ -20,10 +20,10 @@ try {
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `admininfo` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `username` varchar(20) NOT NULL,
-            `email` varchar(30) NOT NULL,
+            `username` varchar(255) NOT NULL,
+            `email` varchar(255) NOT NULL,
             `contact` bigint(10) DEFAULT NULL,
-            `password` varchar(40) NOT NULL,
+            `password` varchar(255) NOT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `username` (`username`),
             UNIQUE KEY `email` (`email`)
@@ -40,12 +40,12 @@ try {
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `carrierdetails` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` varchar(50) NOT NULL,
+            `name` varchar(255) NOT NULL,
             `img_srcs` varchar(255) NOT NULL DEFAULT 'img/images/user-regular.png',
-            `email` varchar(30) NOT NULL,
-            `address` varchar(50) DEFAULT NULL,
+            `email` varchar(255) NOT NULL,
+            `address` varchar(255) DEFAULT NULL,
             `contact` bigint(10) NOT NULL,
-            `password` varchar(50) NOT NULL,
+            `password` varchar(255) NOT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `email` (`email`)
         )
@@ -55,12 +55,12 @@ try {
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `consignordetails` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` varchar(50) NOT NULL,
+            `name` varchar(255) NOT NULL,
             `img_srcs` varchar(255) NOT NULL DEFAULT 'img/images/user-regular.png',
-            `email` varchar(30) NOT NULL,
-            `contact` bigint(50) NOT NULL,
-            `address` varchar(10) DEFAULT NULL,
-            `password` varchar(50) NOT NULL,
+            `email` varchar(255) NOT NULL,
+            `contact` bigint(10) NOT NULL,
+            `address` varchar(255) DEFAULT NULL,
+            `password` varchar(255) NOT NULL,
             PRIMARY KEY (`id`),
             UNIQUE KEY `email` (`email`)
         )
