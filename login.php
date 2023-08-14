@@ -114,7 +114,7 @@ if (isset($_POST['loginbtn'])) {
                     </div>
                 </div>
                 
-                <small><a href="#">Forgot Password?</a></small>
+                <small><a href="forgotPassword/forgot_password.php">Forgot Password?</a></small>
                 
                 <div class="btn-field">
                     <button type="submit" name="loginbtn" value="login">Log In</button>

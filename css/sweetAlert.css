@@ -37,3 +37,15 @@
 .error-list{
     color: whitesmoke;
 }
+
+/* Default button color */
+.swal2-popup .swal2-styled {
+    background-color: #7dcabb;
+    color: white;
+  }
+  
+  /* Button hover color */
+  .swal2-popup .swal2-styled:hover {
+    background-color: #01896e;
+  }
+  

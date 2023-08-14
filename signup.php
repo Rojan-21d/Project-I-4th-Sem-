@@ -104,7 +104,6 @@ if (!empty($errors)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
     <script src="js/imageValidation.js"></script>
-    
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/registration.css">
     <link rel="stylesheet" href="css/sweetAlert.css">
@@ -172,7 +171,6 @@ if (!empty($errors)) {
                             <div class="input-field">
                                 <i class="fa-solid fa-image left"></i>
                                 <input type="file"  name="profile_pic" id="profile_pic" accept="image/*">
-                                <!-- <input type="file" id="profile_pic" name="profile_pic"> -->
                             </div>
                         </div>
                         <div class="user-selects">

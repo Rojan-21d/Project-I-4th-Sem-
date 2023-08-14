@@ -77,7 +77,7 @@ try {
             `distance` int(11) DEFAULT NULL,
             `description` varchar(500) DEFAULT NULL,
             `weight` int(11) DEFAULT NULL,
-            `status` varchar(55) DEFAULT NULL,
+            `status` varchar(55) DEFAULT 'notBooked',
             `consignor_id` int(11) DEFAULT NULL,
             `img_srcs` varchar(124) DEFAULT NULL,
             PRIMARY KEY (`id`),
@@ -101,6 +101,30 @@ try {
             CONSTRAINT `shipment_ibfk_3` FOREIGN KEY (`load_id`) REFERENCES `loaddetails` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
         )
     ");
+
+    //For password reset
+    
+    $pdo->exec("
+    ALTER TABLE `carrierdetails` 
+    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
+    ADD UNIQUE (`reset_token_hash`); 
+    ");
+
+    $pdo->exec("
+    ALTER TABLE `consignordetails` 
+    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
+    ADD UNIQUE (`reset_token_hash`); 
+    ");
+
+    $pdo->exec("
+    ALTER TABLE `admininfo` 
+    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
+    ADD UNIQUE (`reset_token_hash`); 
+    ");
+
 
     echo "Database and tables created successfully.";
 } catch (PDOException $e) {

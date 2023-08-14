@@ -5,7 +5,7 @@ $result = $conn->query($sql);
 <link rel="stylesheet" href="css/maincontentstyle.css">
 <div class="congmain">
     <form action="layout/addload.php" method="post" class="addForm">
-        <button type="submit" name="addLoad">ADD</button>
+        <button type="submit" name="addLoad">ADD LOAD</button>
     </form>
     <div class="table-container">
         <div class="head">
