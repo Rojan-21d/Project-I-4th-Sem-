@@ -7,62 +7,34 @@ if(isset($_POST["verify"])){
     require '../backend/databaseconnection.php';
 
     session_start();
-    $userSelects = $_SESSION['userSelects'];    // Store the verified OTP in a session variable
-
+    $userSelects = $_SESSION['userSelects'];
 
     $table = ($userSelects === "carrier") ? "carrierdetails" : "consignordetails";
     $sql = "SELECT * FROM $table WHERE reset_otp_hash = ?";
     $stmt = $conn->prepare($sql);
 
-    // $stmt = bind_param("s",$otp_hash); 
-    $stmt->bind_param("s", $otp_hash);  // This should be $stmt->bind_param("s", $otp_hash);
+    $stmt->bind_param("s", $otp_hash); // Binding
 
     $stmt->execute();
 
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
-    
+
     if($user === null) {
-        ?>
-        <script>
-        Swal.fire({
-            title: 'OTP Expired',
-            text: 'The OTP Not Found.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'forgot_password.php';
-            }
-        });
-        </script>
-        <?php
-        exit; // Make sure to exit after displaying the message
-        }
+        $error_message = "Invalid OTP!"; // Set an error message for invalid OTP
+    }
 
-    if(strtotime($user["reset_otp_expires_at"]) <= time()){
-        ?>
-        <script>
-        Swal.fire({
-            title: 'OTP Expired',
-            text: 'The OTP has expired.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'forgot_password.php';
-            }
-        });
-        </script>
-        <?php
-        exit; // Make sure to exit after displaying the message
-        }
+    if ($user !== null && strtotime($user["reset_otp_expires_at"]) <= time()) {
+        $error_message = "OTP Expired!"; // Set an error message for expired OTP
+    }
 
-    // After verifying the OTP and before redirection
-    $_SESSION['otp'] = $otp; // Store the verified OTP in a session variable
+    if (!isset($error_message)) {
+        // After verifying the OTP and before redirection
+        $_SESSION['otp'] = $otp; // Store the verified OTP in a session variable
 
-    header ('location: reset_password.php'); // This will cause a redirection
-    exit;
+        header ('location: reset_password.php'); // This will cause a redirection
+        exit;
+    }
 }
 ?>
 
@@ -71,39 +43,42 @@ if(isset($_POST["verify"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/login.css">
     <title>OTP Verification</title>
 </head>
 <body>
-<form action="" method="post">
-    <h1>OTP Verification</h1>
-    OTP: <input type="number" name="otp">
-    <button type="submit" name="verify">Verify</button>
-</form>
+    <div class="container"> 
+        <div class="form-box">
+            <h1>OTP Verification</h1>
+            <form action="" method="post">
+                <div class="input-group-login" >
+                    <div class="input-field " >
+                        <input type="text" maxlength="6" inputmode="numeric" placeholder="OTP Here" name="otp" id="otp" required style="padding-left: 15px;">
+                    </div>
+                    <?php if (isset($error_message)) : ?>
+                        <div class="errorOTP error-message" id="errorOTP">
+                            <?php echo $error_message; ?>
+                        </div>
+                    <?php endif; ?>                
+                    <div class="btn-field">
+                        <?php if (isset($user) && strtotime($user["reset_otp_expires_at"]) <= time()) : ?>
+                            <button type="button" id="resendOTPButton">Resend OTP</button>
+                        <?php else : ?>
+                            <button type="submit" name="verify">Verify</button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <small><a href="../login.php">Go to Login</a></small>
+            </form>
+        </div>
+    </div>
+    <script>
+        <?php if (isset($user) && strtotime($user["reset_otp_expires_at"]) <= time()) : ?>
+            document.getElementById('resendOTPButton').addEventListener('click', function() {
+                window.location.href = 'send_reset_password.php';
+            });
+        <?php endif; ?>
+    </script>
 </body>
 </html>
 
-
-<!-- // Validation
-if (strlen($password) < 8 || strlen($password) > 24) {
-    $errors[] = "Password must be between 8 and 24 characters";
-}
-if ($_POST['password'] !== $_POST['password_confirmation']){
-    $errors[] = 'passwords do not match!';
-}
-
-// Hashing
-$password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-
-// Updating in Database
-$sql = "UPDATE $table 
-        SET passsword =?,
-            reset_otp_hash = NULL,
-            reset_otp_expires_at = NULL
-        WHERE ID = ?";
-
-$stmt = $conn->prepare($sql);
-$stmt = bind_param("ss",$password_hash,$user['id']);
-$stmt->execute();
-
-echo "Password Changed"; -->

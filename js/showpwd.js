@@ -1,16 +1,19 @@
 const togglePassword = document.querySelector('#togglePassword');
+const togglePassword2 = document.querySelector('#togglePassword2');
 const password = document.querySelector('#password');
+const passwordConfirmation = document.querySelector('#password_confirmation');
 
-togglePassword.addEventListener('click', function (e) {
-    // toggle the type attribute
-    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-    password.setAttribute('type', type);
-    // toggle the eye slash icon
-    this.classList.toggle('fa-eye-slash');
+togglePassword.addEventListener('click', function () {
+    togglePasswordVisibility(password);
 });
 
-// const pwd = document.getElementById("pwd");
-// const chk = document.getElementById("chk");
-// chk.onchange = function(e){
-//     pwd.type = chk.checked ? "text" : "password";
-// };
+togglePassword2.addEventListener('click', function () {
+    togglePasswordVisibility(passwordConfirmation);
+});
+
+function togglePasswordVisibility(inputField) {
+    const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
+    inputField.setAttribute('type', type);
+    togglePassword.classList.toggle('fa-eye-slash');
+    togglePassword2.classList.toggle('fa-eye-slash');
+}
