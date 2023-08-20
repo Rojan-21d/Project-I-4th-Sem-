@@ -103,26 +103,25 @@ try {
     ");
 
     //For password reset
-    
     $pdo->exec("
     ALTER TABLE `carrierdetails` 
-    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
-    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
-    ADD UNIQUE (`reset_token_hash`); 
+    ADD `reset_otp_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_otp_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_otp_hash`, 
+    ADD UNIQUE (`reset_otp_hash`); 
     ");
 
     $pdo->exec("
     ALTER TABLE `consignordetails` 
-    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
-    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
-    ADD UNIQUE (`reset_token_hash`); 
+    ADD `reset_otp_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_otp_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_otp_hash`, 
+    ADD UNIQUE (`reset_otp_hash`); 
     ");
 
     $pdo->exec("
     ALTER TABLE `admininfo` 
-    ADD `reset_token_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
-    ADD `reset_token_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_token_hash`, 
-    ADD UNIQUE (`reset_token_hash`); 
+    ADD `reset_otp_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    ADD `reset_otp_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_otp_hash`, 
+    ADD UNIQUE (`reset_otp_hash`); 
     ");
 
 
