@@ -75,7 +75,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
                         mysqli_data_seek($result, 0); // Reset the result pointer to the beginning
                 
                         // Columns to exclude from the table
-                        $excludedColumns = ['password', 'img_srcs', 'id'];
+                        $excludedColumns = ['password', 'img_srcs', 'id', 'reset_otp_hash', 'reset_otp_expires_at'];
                 
                         // Remove the excluded columns from the array of column names
                         $columns = array_filter($columns, function($column) use ($excludedColumns) {
