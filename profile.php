@@ -71,9 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploadedFilePath)) {
                     // Image uploaded successfully, prepare to update database
                     if ($userSelects == "carrier") {
-                        $updateSql = "UPDATE carrierdetails SET img_srcs = '$uploadedFilePath'";
+                        $updateSql = "UPDATE carrierdetails SET img_srcs = '$uploadedFilePath',";
                     } elseif ($userSelects == "consignor") {
-                        $updateSql = "UPDATE consignordetails SET img_srcs = '$uploadedFilePath'";
+                        $updateSql = "UPDATE consignordetails SET img_srcs = '$uploadedFilePath',";
                     }
                 } else {
                     // Failed to upload the new image
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         // Add other fields to the update query
-        $updateSql .= ", name = '$name', contact = '$contact', email = '$email', address = '$address'";
+        $updateSql .= " name = '$name', contact = '$contact', email = '$email', address = '$address'";
         
         if (!empty($newPassword)) {
             // Update the password field if a new password is provided
@@ -130,6 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else if (!empty($errors)) {
         $errorMessages = join("\n", $errors);
         echo '<script>
+        swal({title:"Error!",text:"' .$errorMessages.'",icon : "warning"});
         Swal.fire({
             icon: "error",
             title: "Sign Up Errors",
@@ -214,8 +215,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function openFileInput() {
             document.getElementById('profile_pic').click();
         }    
-    </script>    
-
+    </script>
 </head>
 <body>
 <div class="container">

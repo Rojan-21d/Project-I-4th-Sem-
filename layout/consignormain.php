@@ -1,8 +1,11 @@
+<link rel="stylesheet" href="css/maincontentstyle.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="css/sweetAlert.css">
+
 <?php
 $sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "'";
 $result = $conn->query($sql);
 ?>
-<link rel="stylesheet" href="css/maincontentstyle.css">
 <div class="congmain">
     <form action="layout/addload.php" method="post" class="addForm">
         <button type="submit" name="addLoad">ADD LOAD</button>
@@ -55,9 +58,7 @@ $result = $conn->query($sql);
                         } elseif ($row['status'] == "delivered") {
                             echo "<p class='status delivered'>Delivered</p>";
                         }
-                        
 
-                        
                         echo "</td>
                         <td>
                             <div class='td-center'>
@@ -68,7 +69,7 @@ $result = $conn->query($sql);
                                     <button type='submit'>More</button>
                                 </form>
                     
-                                <form action='backend/moredeleteload.php' method='post' class='deleteBtn'>
+                                <form action='backend/moredeleteload.php' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                                     <input type='hidden' name='action' value='delete'>
                                     <input type='hidden' name='id' value='" . $load_id . "'>
                                     <button type='submit'>Delete</button>
@@ -84,3 +85,5 @@ $result = $conn->query($sql);
         </table>
     </div>
 </div>
+<script src="js/confirmationSA.js"></script>
+

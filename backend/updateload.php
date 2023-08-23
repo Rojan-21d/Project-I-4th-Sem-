@@ -1,10 +1,13 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="../css/sweetAlert.css">
+<link rel="stylesheet" href="../css/addtable.css">
+
 <?php
 require 'databaseconnection.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     // The form has been submitted and 'id' key exists in $_POST
-    // Access the values using $_POST['id']
     $id = $_POST['id'];
     $name = $_POST["name"];
     $origin = $_POST["origin"];
@@ -27,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             // Image uploaded successfully
         } else {
             // Failed to upload image
-            echo "<script> alert('Failed to upload image.');</script>";
+            // echo "<script> alert('Failed to upload image.');</script>";
+            echo "<script>Swal.fire('Failed to upload image.');
+            </script>";
         }
     }
 
@@ -54,13 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     if ($stmt) {
         $stmt->bind_param(str_repeat('s', count($params)), ...$params);
         if ($stmt->execute()) {
-            echo "<script> alert('Updated!');</script>";
+            echo "<script> alert('Updated Sucessfully.');</script>";
+            // echo "<script> Swal.fire('Updated Sucessfully.');</script>";
+
         } else {
             echo "<script> alert('Update failed: " . $stmt->error . "');</script>";
+            // echo "<script> Swal.fire('Update failed: " . $stmt->error . "');</script>";
+
         }
         $stmt->close();
     } else {
         echo "<script> alert('Update query preparation failed: " . $conn->error . "');</script>";
+        // echo "<script> Swal.fire('Update query preparation failed: " . $conn->error . "');</script>";
+
     }
 }
 
@@ -75,6 +86,7 @@ if ($stmt) {
     $stmt->close();
 } else {
     echo "<script> alert('Load details fetch query preparation failed: " . $conn->error . "');</script>";
+    // echo "<script> Swal.fire('Load details fetch query preparation failed: " . $conn->error . "');</script>";
 }
 ?>
 
@@ -118,4 +130,3 @@ if ($stmt) {
     </form>
 </div>
 
-<link rel="stylesheet" href="../css/addtable.css">

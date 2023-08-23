@@ -80,7 +80,10 @@ table tr:hover{
 
 .head-table{
     text-align: center;
-    margin: auto .5rem  ;
+    margin: auto .5rem;
+    column-gap: 2%;
+    display: flex;
+    justify-content: center;
 }
 
 .head-table button{

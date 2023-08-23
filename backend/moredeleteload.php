@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="../css/maincontentstyle.css">
+<link rel="stylesheet" href="../css/headerfooterstyle.css">
+<link rel="stylesheet" href="../css/sweetAlert.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 session_start();
 
@@ -159,7 +163,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                         echo '<li>Contact: '. $rowShip["contact"]. '</li>';
                         echo '</ul>';
                         echo "<div class='td-center'>
-                        <form action='' method='post' class='cancelBtn'>
+                        <form action='' method='post' class='cancelBtn' onsubmit=\"confirmCancel(event)\">
                             <input type='hidden' name='action' value='cancel'>
                             <input type='hidden' name='id' value='" . $id . "'>
                             <input type='hidden' name='shipment_id' value='" . $row['id'] . "'> <!--passing shipment id-->
@@ -174,13 +178,13 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                 echo "<div class='more-action description-more'>
                     <h3>Action</h3>
                     <div class='td-center'>
-                        <form action='' method='post' class='moreBtn'>
+                        <form action='' method='post' class='moreBtn'> <!--class more for css-->
                             <input type='hidden' name='action' value='edit'>
                             <input type='hidden' name='id' value='" . $id . "'>
                             <button type='submit'>Edit</button>
                         </form>
                                         
-                        <form action='' method='post' class='deleteBtn'>
+                        <form action='backend/moredeleteload.php' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                             <input type='hidden' name='action' value='delete'>
                             <input type='hidden' name='id' value='" . $id . "'>
                             <button type='submit'>Delete</button>
@@ -197,5 +201,5 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
 
 include '../layout/footer.php';
 ?>
-<link rel="stylesheet" href="../css/maincontentstyle.css">
-<link rel="stylesheet" href="../css/headerfooterstyle.css">
+
+<script src="../js/confirmationSA.js"></script>
