@@ -22,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = $_FILES['image'];
     $imageFileName = $image['name'];
     $imageTempName = $image['tmp_name'];
-    $imageDestination = 'loadImages/' . $imageFileName;
+    $imageDestination = 'img/loadUploads/' . $imageFileName;
 
-// Move the uploaded image to a specific directory
-move_uploaded_file($imageTempName, $imageDestination);
+    // Move the uploaded image to a specific directory
+    move_uploaded_file($imageTempName, '../'.$imageDestination);
 
 
     // Insert the data into the database
@@ -33,6 +33,7 @@ move_uploaded_file($imageTempName, $imageDestination);
     $sql = "INSERT INTO loaddetails (name, origin, destination, distance, description, weight, status, consignor_id, img_srcs)
                     VALUES ('$name', '$origin', '$destination', '$distance', '$description', '$weight', 'notBooked', '{$_SESSION['id']}', '$imageDestination')";
     $result = $conn->query($sql);
+
     if ($result) {
         echo "<script>alert('Inserted')</script>";
         echo "<script>window.location.href = '../layout/addload.php';</script>";

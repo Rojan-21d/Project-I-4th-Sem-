@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
     $contact = trim($_POST['contact']);
     $email = trim($_POST['email']);
+    $email = strtolower($email);
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 

@@ -10,7 +10,7 @@
     <header>  
         <nav>
             <a href="home.php">
-                <img class="logo" src="img/mainLogo2.png" alt="logo">
+                <img class="logo" src="img/defaultImg/mainLogo2.png" alt="logo">
             </a>
             <div class="nav__links">
                     <img src="<?php echo $_SESSION['profilePic'] ?>" onclick='toggleMenu()'>
@@ -30,15 +30,15 @@
                         <p>Profile</p>                      
                     </a>
                     <a href="home.php" class="sub-menu-link">
-                        <img src="img/images/home.png">
+                        <img src="img/defaultImg/home.png">
                         <p>Home</p>                      
                     </a>
                     <a href="history.php" class="sub-menu-link">
-                        <img src="img/images/setting.png">
+                        <img src="img/defaultImg/setting.png">
                         <p>History</p>                      
                     </a>
                     <a href="backend/logoutmodule.php" class="sub-menu-link">
-                        <img src="img/images/logout.png">
+                        <img src="img/defaultImg/logout.png">
                         <p>Logout</p>                      
                     </a>
                 </div>

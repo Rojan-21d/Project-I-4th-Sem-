@@ -3,7 +3,7 @@ $errors = array(); // A single array to store all validation errors
 
 if (isset($_POST['signupBtn'])) {
     $name = $_POST['name'];
-    $email = $_POST['email'];
+    $email = strtolower($_POST['email']);
     $contact = $_POST['phone'];
     $address = $_POST['address'];
     $password = $_POST['password'];
@@ -29,7 +29,7 @@ if (isset($_POST['signupBtn'])) {
     // ... Image upload validation ...
     if (!empty($_FILES['profile_pic']['name'])) {
         $allowed_formats = array('jpg', 'jpeg', 'png');
-        $upload_directory = 'img/uploads/';
+        $upload_directory = 'img/profileUploads/';
         $img_name = $_FILES['profile_pic']['name'];
         $img_extension = pathinfo($img_name, PATHINFO_EXTENSION);
 
@@ -43,7 +43,7 @@ if (isset($_POST['signupBtn'])) {
             }
         }
     } else {
-        $uploaded_file_path = 'img/images/user-regular.png';
+        $uploaded_file_path = 'img/defaultImg/user-regular.png';
     }
 
     if (empty($errors)) {
@@ -131,7 +131,7 @@ if (!empty($errors)) {
             <div class="content">
                 <div class="logo-section">
                     <div class="logo">
-                        <img class="logo-img" src="img/mainLogo2.png" alt="logo">
+                        <img class="logo-img" src="img/defaultImg/mainLogo2.png" alt="logo">
                     </div>
                 </div>
                 <div class="input-section">

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         $image = $_FILES['image'];
         $imageFileName = $image['name'];
         $imageTempName = $image['tmp_name'];
-        $imageDestination = 'imageLoads/' . $imageFileName;
+        $imageDestination = 'img/imageUploads/' . $imageFileName;
 
         // Move the uploaded image to a specific directory
         if (move_uploaded_file($imageTempName, $imageDestination)) {
@@ -92,7 +92,7 @@ if ($stmt) {
 
 <div class="add-main">
     <h2>Edit Load Details</h2>
-    <form action="updateload.php" method="POST" enctype="multipart/form-data" class="addForm">
+    <form action="" method="POST" enctype="multipart/form-data" class="addForm">
         <div class="data-input">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="<?php echo $row['name'] ?? ''; ?>">

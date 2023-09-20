@@ -13,7 +13,7 @@ if(isset($_SESSION['email'])){
 
 if (isset($_POST['loginbtn'])) {
     // Get the username and password from the form
-    $email = $_POST['email'];
+    $email = strtolower($_POST['email']);
     $password = $_POST['password'];
     $userselects = $_POST['userselects'];
 
