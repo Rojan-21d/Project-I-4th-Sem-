@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/maincontentstyle.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="css/sweetAlert.css">
+<title>Home-Consignor</title>
 
 <?php
 $sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "'";

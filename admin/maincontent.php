@@ -30,7 +30,6 @@ if ($selectedButton === 'carrier') {
 $deleteTable = ''; // Initialize the deleteTable variable
 
 // Check if the delete form is submitted
-// Check if the delete form is submitted
 if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
     $id = $_POST['id'];
 
@@ -46,6 +45,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
 
 
 ?>
+
 <div class="admin-main">
     <div class="head-table">
     <form action="?selected=carrier" method="POST">
@@ -69,28 +69,44 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
                     $columns = array_keys(mysqli_fetch_assoc($result));
                     mysqli_data_seek($result, 0);
 
-                    $excludedColumns = ['password', 'img_srcs', 'id', 'reset_otp_hash', 'reset_otp_expires_at'];
+                    $excludedColumns = ['password', 'id', 'reset_otp_hash', 'reset_otp_expires_at'];
 
                     echo "<tr><th>SN</th>";
+                    
                     foreach ($columns as $column) {
                         if (!in_array($column, $excludedColumns)) {
-                            echo "<th>" . strtoupper($column) . "</th>";
+                            // Display the column name in uppercase as the header
+                            if ($column === 'img_srcs') {
+                                // Display "IMAGES" instead of "IMAGE_srcs" for the image column
+                                echo "<th>IMAGES</th>";
+                            } else {
+                                echo "<th>" . strtoupper($column) . "</th>";
+                            }
                         }
                     }        
                     echo "<th>ACTION</th>";
                     echo "</tr>";
 
                     $i = 1;
+                    
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr><td>$i</td>";
+
                         foreach ($row as $column => $value) {
                             if (!in_array($column, $excludedColumns)) {
-                                echo "<td>$value</td>";
+                                if ($column === 'img_srcs') {
+                                    // Display the image in the cell
+                                    echo "<td><img src='../$value' alt='Image' class='imgsrc'></td>";
+                                } else {
+                                    // Display other columns normally
+                                    echo "<td>$value</td>";
+                                }
                             }
-                            if ($column === 'id') {
+                            if ($column === 'id' || $column === 'gid' || $column === 'pid') {
                                 $id = $value;
                             }
                         }
+
                         echo "<td class='td-center'>
                         <form action='' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                             <input type='hidden' name='action' value='delete'>
@@ -110,7 +126,5 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
         </table>
     </div>
 </div>
+
 <script src="../js/confirmationSA.js"></script>
-
-
-

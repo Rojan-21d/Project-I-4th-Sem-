@@ -9,7 +9,7 @@
 <body>
 <nav class="adm-header">
     <a href="adminpanel.php">
-        <img class="logo" src="../img/mainLogo2.png" alt="Logo">
+        <img class="logo" src="../img/defaultImg/mainLogo2.png" alt="Logo">
     </a>
     <a href="logout.php">Logout</a>
 </nav>

@@ -28,7 +28,7 @@ include '../backend/databaseconnection.php';
         </div>
         <div class="data-input">
             <label for="distance">Distance (KM):</label>
-            <input type="text" id="distance" name="distance">
+            <input type="number" id="distance" name="distance">
         </div>
         <div class="data-input">
             <label for="description">Description:</label>

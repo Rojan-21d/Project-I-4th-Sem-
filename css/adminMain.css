@@ -41,12 +41,6 @@ h2, th{
     padding: .75rem .9375rem;
 }
 
-.td-center{
-    display: flex;
-    justify-content: center;
-    gap: 4%;
-}
-
 td{
     padding: .5rem;
 }
@@ -102,6 +96,12 @@ table tr:hover{
     color: white;
   }
 
+
+.imgsrc{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
 
 
 

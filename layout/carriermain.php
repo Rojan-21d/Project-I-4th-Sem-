@@ -16,7 +16,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/maincontentstyle.css">
-    <title>Home</title>
+    <title>Home-Carrier</title>
 </head>
 <body>
     <div class="main-content">

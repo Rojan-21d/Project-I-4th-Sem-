@@ -9,7 +9,8 @@ $userSelects = isset($_POST['userselects']) ? $_POST['userselects'] : $_SESSION[
 
 $randomNumberOTP = mt_rand(100000, 999999);
 $otp_hash = hash("sha256", $randomNumberOTP);
-$expiry = date("y-m-d H:i:s", time() + 60 * 10);
+date_default_timezone_set('Asia/Kathmandu');
+$expiry = date("y-m-d H:i:s", time() + 60 * 10);.
 
 require '../backend/databaseconnection.php';
 
@@ -42,7 +43,7 @@ END;
         $mail->send();
         // Redirect to the OTP verification page
         ?>
-        "<script>
+        .<script>
         Swal.fire({
             title: 'Email sent.',
             text: 'Please check your inbox.',
@@ -53,13 +54,13 @@ END;
                 window.location.href = 'otpVerify.php';
             }
         });
-        </script>";    
+        </script>    
         <?php
         exit;
     } catch (Exception $e) {
         // Display error message using SweetAlert
         ?>
-        <script>
+        .<script>
         Swal.fire({
             title: 'Error',
             text: 'Message could not be sent. Mailer error: <?=$mail->ErrorInfo?>',
