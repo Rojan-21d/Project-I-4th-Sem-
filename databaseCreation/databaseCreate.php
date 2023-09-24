@@ -3,7 +3,7 @@
 $hostname = 'localhost';
 $username = 'root';
 $password = '';
-$database = 'gantabyaprojecttest';
+$database = 'gantabyaproject';
 
 try {
     // Create a new PDO instance for database connection

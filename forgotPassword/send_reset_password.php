@@ -12,7 +12,7 @@ $userSelects = isset($_POST['userselects']) ? $_POST['userselects'] : $_SESSION[
 $randomNumberOTP = mt_rand(100000, 999999);
 $otp_hash = hash("sha256", $randomNumberOTP);
 date_default_timezone_set('Asia/Kathmandu');
-$expiry = date("y-m-d H:i:s", time() + 60 * 10);
+$expiry = date("y-m-d H:i:s", time() + 60 * 3);
 
 require '../backend/databaseconnection.php';
 
@@ -38,7 +38,7 @@ if ($conn->affected_rows) {
     $mail->addAddress($email);
     $mail->Subject = "Password Reset";
     $mail->Body = <<<END
-Your OTP to reset password: $randomNumberOTP. OTP will expire in 10 minutes.
+Your OTP to reset password: $randomNumberOTP. OTP will expire in 3 minutes.
 END;
 
     try {
