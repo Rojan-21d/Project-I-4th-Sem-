@@ -148,8 +148,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>User Profile</title>
     <link rel="stylesheet" type="text/css" href="css/profile.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <link rel="stylesheet" href="css/sweetAlert.css">
+    <script src="js/sweetalert.js"></script>
     <script src="js/imageValidation.js"></script>
     <script src="js/imgPreview.js"></script>
     <script>

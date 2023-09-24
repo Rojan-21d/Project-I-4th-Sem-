@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="../css/maincontentstyle.css">
 <link rel="stylesheet" href="../css/headerfooterstyle.css">
 <link rel="stylesheet" href="../css/sweetAlert.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+<script src="../js/sweetalert.js"></script>
+
 <?php
 session_start();
 

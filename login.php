@@ -35,10 +35,9 @@ if (isset($_POST['loginbtn'])) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $hashedPassword = $row['password'];
+        $thePassword = $row['password'];
 
-        // Verify the hashed password
-        if (password_verify($password, $hashedPassword)) {
+        if (password_verify($password, $thePassword)) {
             // Password is correct, set session variables
             $_SESSION['id'] = $row['id'];
             $_SESSION['name'] = $row['name'];

@@ -1,6 +1,9 @@
 <?php
 $errors = array(); // A single array to store all validation errors
 
+// ... Database connection ...
+require 'backend/databaseconnection.php';
+
 if (isset($_POST['signupBtn'])) {
     $name = $_POST['name'];
     $email = strtolower($_POST['email']);
@@ -8,6 +11,7 @@ if (isset($_POST['signupBtn'])) {
     $address = $_POST['address'];
     $password = $_POST['password'];
     $userselects = $_POST['userselects'];
+    $table = ($userselects === "carrier") ? "carrierdetails" : "consignordetails";
 
     // Validate form inputs
     if (empty($name) || empty($email) || empty($contact) || empty($address) || empty($password)) {
@@ -25,6 +29,14 @@ if (isset($_POST['signupBtn'])) {
     if (strlen($contact) !== 10) {
         $errors[] = "Contact Number Length must be 10";
     }
+
+    // Uniqye Key Validation 
+    $sql_check_mail = "SELECT * FROM $table WHERE email = '$email'";
+    $result_check_mail = $conn->query($sql_check_mail);
+    if ($result_check_mail->num_rows > 0){
+        $errors[] = "Email Already Registered";
+    }
+
 
     // ... Image upload validation ...
     if (!empty($_FILES['profile_pic']['name'])) {
@@ -48,11 +60,7 @@ if (isset($_POST['signupBtn'])) {
 
     if (empty($errors)) {
 
-        // ... Database connection ...
-        require 'backend/databaseconnection.php';
-
         // Prepare and execute the SQL query
-        $table = ($userselects === "carrier") ? "carrierdetails" : "consignordetails";
         $sql = "INSERT INTO $table (name, img_srcs, email, contact, address, password) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
@@ -84,13 +92,16 @@ if (isset($_POST['signupBtn'])) {
 // Display errors using SweetAlert
 if (!empty($errors)) {
     $errorMessages = join("\n", $errors);
-    echo '<script>
+    echo '.<script>
+    document.addEventListener("DOMContentLoaded", function() {
     Swal.fire({
         icon: "error",
         title: "Sign Up Errors",
         html: "' . $errorMessages . '",
         showCloseButton: true,
     });
+});
+
     </script>';
 }
 ?>
@@ -102,7 +113,9 @@ if (!empty($errors)) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   -->
+    <script src="js/sweetalert.js"></script>
+  
     <script src="js/imageValidation.js"></script>
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/registration.css">

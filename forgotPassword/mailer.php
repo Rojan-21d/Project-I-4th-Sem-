@@ -4,10 +4,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-// require 'phpmailer/src/Exception.php';
-// require 'phpmailer/src/PHPMailer.php';
-// require 'phpmailer/src/SMTP.php';
-
 require __DIR__ . "/vendor/autoload.php";
 
 $mail = new PHPMailer(true);
@@ -28,7 +24,7 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 
 // Your Gmail address (sender)
-$mail->Username = "gantabyaproject@gmail.com"; // Replace with your Gmail address
+$mail->Username = "gantabyaproject@gmail.com"; // Gmail address
 
 // Use the generated App Password for Gmail
 $password = "mtzvtmteckouphbk";

@@ -1,4 +1,6 @@
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+<script src="../js/sweetalert.js"></script>
+
 <link rel="stylesheet" href="../css/sweetAlert.css">
 <?php
 session_start();
