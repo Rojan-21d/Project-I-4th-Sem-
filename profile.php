@@ -29,6 +29,7 @@ if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
 }
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
     $contact = trim($_POST['contact']);
@@ -58,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_FILES['profile_pic']['name'])) {
             // Validate and process the image upload
             $allowedExtensions = ['jpg', 'jpeg', 'png'];
-            $uploadDirectory = 'img/uploads/';
+            $uploadDirectory = 'img/loadUploads/';
         
             $imgName = $_FILES['profile_pic']['name'];
             $imgExtension = pathinfo($imgName, PATHINFO_EXTENSION);
@@ -124,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirect to the profile page with an error message
             // header("Location: profile.php?error=1");
             // Redirect to the profile page with a specific error message
-            header("Location: profile.php?error=db_update_failed");
+            header("Location: profile.php?error=1");
             exit;
         }
     } // Display errors using SweetAlert

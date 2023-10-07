@@ -8,25 +8,25 @@ function validateForm() {
     var phone = document.getElementById("phone").value;
     
     if (name === "") {
-        errors.push("Form js: Name is required.");
+        errors.push("Name is required.");
     }
     
     if (email === "") {
-        errors.push("Form js: Email is required.");
+        errors.push("Email is required.");
     } else if (!validateEmail(email)) {
-        errors.push("Form js: Invalid email format.");
+        errors.push("Invalid email format.");
     }
     
     if (password === "") {
-        errors.push("Form js: Password is required.");
+        errors.push("Password is required.");
     } else if (password.length < 8 || password.length > 24) {
-        errors.push("Form js: Password must be between 8 and 24 characters.");
+        errors.push("Password must be between 8 and 24 characters.");
     }
     
     if (phone === "") {
-        errors.push("Form js: Phone number is required.");
+        errors.push("Phone number is required.");
     } else if (phone.length !== 10) {
-        errors.push("Form js: Phone number must be 10 digits.");
+        errors.push("Phone number must be 10 digits.");
     }
     
     // Display errors using SweetAlert with bullet points

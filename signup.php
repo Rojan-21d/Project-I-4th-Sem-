@@ -115,7 +115,6 @@ if (!empty($errors)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   -->
     <script src="js/sweetalert.js"></script>
-  
     <script src="js/imageValidation.js"></script>
     <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/registration.css">
