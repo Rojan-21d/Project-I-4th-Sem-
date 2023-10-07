@@ -98,9 +98,7 @@ if (isset($_POST['loginbtn'])) {
                         <i class="fa-solid fa-key"></i>
                         <input type="password" placeholder="Password *" name="password" id="password" required>
                         <i class="fa-regular fa-eye" id="togglePassword"></i>
-                    </div>     
-                    <!-- <input type="password" placeholder="Password *" name="password" id="pwd" required> -->
-                    <!-- <input type="checkbox" name="" id="chk">Show Password -->
+                    </div>
                 </div>          
                 <div class="user-selects">
                     <div class="carrier-part">
