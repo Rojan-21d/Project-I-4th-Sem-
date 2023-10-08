@@ -71,7 +71,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
                     $columns = array_keys(mysqli_fetch_assoc($result));
                     mysqli_data_seek($result, 0);
 
-                    $excludedColumns = ['password', 'id', 'reset_otp_hash', 'reset_otp_expires_at'];
+                    $excludedColumns = ['password', 'id', 'reset_otp_hash', 'reset_otp_expires_at', 'consignor_id'];
 
                     echo "<tr><th>SN</th>";
                     

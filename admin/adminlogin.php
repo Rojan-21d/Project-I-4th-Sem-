@@ -47,12 +47,13 @@ if(isset($_POST['login']))
             <?php } ?>
             <form action= "" method="post">
                 <div class="input-field">
-                    <i class="fa fa-user"></i>
+                    <i class="fa fa-user fa-solid"></i>
                     <input type="text" name="username" placeholder="Username" required>
                 </div>
                 <div class="input-field">
-                    <i class="fa fa-lock"></i>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <i class="fa fa-lock fa-solid"></i>
+                    <input type="password" name="password" placeholder="Password" name="password" id="password" required>
+                    <i class="fa-regular fa-eye" id="togglePassword"></i>
                 </div>
                 <div class="btn-field">
                     <button type="submit" name="login">Login</button>
@@ -60,5 +61,7 @@ if(isset($_POST['login']))
             </form>
         </div>
     </div>
+    <script src="../js/showpwd.js"></script>
+
 </body>
 </html>

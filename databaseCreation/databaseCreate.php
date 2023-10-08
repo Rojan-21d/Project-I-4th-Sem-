@@ -33,7 +33,7 @@ try {
     // Insert data into `admininfo` table
     $pdo->exec("
         INSERT INTO `admininfo` (`id`, `username`, `email`, `contact`, `password`) VALUES
-        (1, 'admin', 'admin@gmail.com', 9802528768, 'admin')
+        (1, 'admin', 'admin@gmail.com', 9800000000, 'admin')
     ");
 
     // SQL code to create `carrierdetails` table
