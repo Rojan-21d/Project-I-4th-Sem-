@@ -22,6 +22,11 @@ if (isset($_POST['signupBtn'])) {
         $errors[] = "Invalid email format";
     }
 
+    $reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+    if(!preg_match($reName, $name)){
+        $errors[] = "Name must be like Rojan Dumaru";
+    }
+
     if (strlen($password) < 8 || strlen($password) > 24) {
         $errors[] = "Password must be between 8 and 24 characters";
     }
@@ -30,7 +35,7 @@ if (isset($_POST['signupBtn'])) {
         $errors[] = "Contact Number Length must be 10";
     }
 
-    // Uniqye Key Validation 
+    // Uniqye Key Email Validation 
     $sql_check_mail = "SELECT * FROM $table WHERE email = '$email'";
     $result_check_mail = $conn->query($sql_check_mail);
     if ($result_check_mail->num_rows > 0){

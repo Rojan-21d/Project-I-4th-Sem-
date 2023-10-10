@@ -162,6 +162,7 @@ th{
     cursor: pointer;
     border-radius: .625rem;
 }
+
   
 .moreBtn button:hover{
     background-color: rgb(3, 245, 3);
