@@ -244,8 +244,14 @@ table tr:hover{
 }
 
 .backBtn button{
-    padding: .4rem .7rem;
+    padding: .6rem 1rem;
     margin-right: 9rem;
+    border: none;
+    background: #04b18f;
+    border-radius: 5px;
+}
+.backBtn button:hover{
+    background-color: #01896e;
 }
 
 .more-img{

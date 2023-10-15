@@ -150,6 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <link rel="stylesheet" href="css/sweetAlert.css">
+    <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
     <script src="js/sweetalert.js"></script>
     <script src="js/imageValidation.js"></script>
     <script src="js/imgPreview.js"></script>
@@ -266,7 +267,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter new password">
+            <input type="password" id="password" name="password" placeholder="Enter new password" id="password">
+            <i class="fa-regular fa-eye" id="togglePassword"></i></input>
             <button type="button" class="edit-button" onclick="enableEdit('password')">Edit</button>
         </div>
         
@@ -275,6 +277,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </form>
 </div>
-    
+<script src="js/showpwd.js"></script>
+
 </body>
 </html>
