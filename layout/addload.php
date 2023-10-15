@@ -16,7 +16,7 @@ include '../backend/databaseconnection.php';
 
 // Check if the user is not logged in
 if (!isset($_SESSION['email'])) {
-    // Redirect the user to the login page or any other authentication page
+    // Redirect the user to the login page
     header("Location: ../login.php");
     exit;
 }
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $weight = $_POST['weight'];
 
-    // Validate form fields (you can add more specific validation rules)
+    // Validate form fields
     $errors = [];
 
     if (empty($name)) {
@@ -55,6 +55,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Weight must be a numeric value.";
     }
     
+    // Correct the file input name from 'image' to 'load_pic'
+    if (!empty($_FILES['load_pic']['name'])) {
+        $allowed_formats = array('jpg', 'jpeg', 'png');
+        $upload_directory = 'img/loadUploads/';
+        $img_name = $_FILES['load_pic']['name'];
+        $img_extension = pathinfo($img_name, PATHINFO_EXTENSION);
+
+        // Validate the file extension
+        if (!in_array(strtolower($img_extension), $allowed_formats)) {
+            $errors[] = "Only JPG, JPEG, and PNG images are allowed.";
+        } else {
+            $uploaded_file_path = $upload_directory . $img_name;
+            if (!move_uploaded_file($_FILES['load_pic']['tmp_name'], '../' . $uploaded_file_path)) {
+                $errors[] = "Error uploading the image.";
+            }
+        }
+    } else {
+        $uploaded_file_path = 'img/defaultImg/loadimage.jpg';
+    }
+
+
+        
     // Display errors using SweetAlert
     if (!empty($errors)) {
         $errorMessages = join("<br>", $errors);
@@ -66,18 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         </script>';
     } else {
-        // Process the uploaded image
-        $image = $_FILES['image'];
-        $imageFileName = $image['name'];
-        $imageTempName = $image['tmp_name'];
-        $imageDestination = 'img/loadUploads/' . $imageFileName;
 
-        // Move the uploaded image to a specific directory
-        move_uploaded_file($imageTempName, '../' . $imageDestination);
 
         // Insert the data into the database
         $sql = "INSERT INTO loaddetails (name, origin, destination, distance, description, weight, status, consignor_id, img_srcs)
-                        VALUES ('$name', '$origin', '$destination', '$distance', '$description', '$weight', 'notBooked', '{$_SESSION['id']}', '$imageDestination')";
+                        VALUES ('$name', '$origin', '$destination', '$distance', '$description', '$weight', 'notBooked', '{$_SESSION['id']}', '$uploaded_file_path')";
         $result = $conn->query($sql);
 
         if ($result) {
@@ -86,7 +101,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             // Handle database insertion error
-            echo "<p>Error: " . $conn->error . "</p>";
+            // echo "<p>Error: " . $conn->error . "</p>";
+            echo '<script>
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Database Error: ' . $conn->error . '",
+            });
+            </script>';    
         }
     }
 }
@@ -138,10 +160,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="number" id="weight" name="weight">
         </div>
         <div class="data-input center">
-        <label for="image">Image:</label>
-            <input class="inpImg" type="file" id="image" name="image" accept="image/*" placeholder="Image">
+            <label for="load_pic">Image:</label>
+            <input class="inpImg" type="file" id="load_pic" name="load_pic" accept="image/*" placeholder="Image">
         </div>
-
         <div class="button-input">
             <input type="hidden" name="id" value="">
         </div>

@@ -1,8 +1,16 @@
-<link rel="stylesheet" href="../css/maincontentstyle.css">
-<link rel="stylesheet" href="../css/headerfooterstyle.css">
-<link rel="stylesheet" href="../css/sweetAlert.css">
-<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-<script src="../js/sweetalert.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/maincontentstyle.css">
+    <link rel="stylesheet" href="../css/headerfooterstyle.css">
+    <link rel="stylesheet" href="../css/sweetAlert.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <script src="../js/sweetalert.js"></script>
+    <title>Load Details</title>    
+</head>
+<body>
 
 <?php
 session_start();
@@ -31,26 +39,46 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         header("Location: updateload.php");
     } elseif ($action == 'cancel'){ // Cancel Load Details
         try {
-        $conn->begin_transaction();
-    
-        $sql = "UPDATE loaddetails SET status = 'notBooked' WHERE id = '$id'";
-        $sql2 = "DELETE FROM shipment WHERE id = '$shipment_id'";
+            $conn->begin_transaction();
         
-        $conn->query($sql);
-        $conn->query($sql2);
-
-        // Commit the transaction
-        $conn->commit();
-
-        echo "<script>alert('Canceled...');</script>";
-        header ("Location: ../home.php");
-        exit;
+            $sql = "UPDATE loaddetails SET status = 'notBooked' WHERE id = '$id'";
+            $sql2 = "DELETE FROM shipment WHERE id = '$shipment_id'";
+        
+            $conn->query($sql);
+            $conn->query($sql2);
+        
+            // Commit the transaction
+            $conn->commit();
+        
+            echo '<script>
+                Swal.fire({
+                    title: "Canceled",
+                    icon: "success",
+                    text: "Load Canceled successfully.",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "../home.php";
+                    }
+                });
+            </script>';
+            exit;
         } catch (\Throwable $th) {
             $conn->rollback();
-            echo "<script language='javascript'>alert('ERROR! ". $th ."');</script>";
-            header ("Location: ../home.php");
+            echo '<script>
+                Swal.fire({
+                    title: "Error",
+                    icon: "error",
+                    html: "ERROR! ' . $th . '",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "../home.php";
+                    }
+                });
+            </script>';
             exit();
-        }
+        }    
     }elseif ($action == 'more') {
         // More of the row
         $sql = "SELECT * FROM loaddetails WHERE id = '$id'";
@@ -186,7 +214,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                             <button type='submit'>Edit</button>
                         </form>
                                         
-                        <form action='backend/moredeleteload.php' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
+                        <form action='' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                             <input type='hidden' name='action' value='delete'>
                             <input type='hidden' name='id' value='" . $id . "'>
                             <button type='submit'>Delete</button>
@@ -205,3 +233,6 @@ include '../layout/footer.php';
 ?>
 
 <script src="../js/confirmationSA.js"></script>
+
+</body>
+</html>

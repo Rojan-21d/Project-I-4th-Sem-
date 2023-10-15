@@ -152,7 +152,7 @@ if (!empty($errors)) {
                     </div>
                 </div>
                 <div class="input-section">
-                    <form method="post" action="" class="login" enctype="multipart/form-data" onsubmit="return validateForm();">
+                    <form method="post" action="" class="login" enctype="multipart/form-data" onsubmit="return validateForm();" autocomplete="off">
                         <div class="input-group">
                             <div class="input-field">
                                 <i class="fa-solid fa-user left"></i>

@@ -114,10 +114,12 @@ html, body{
     border: 0;
     outline: 0;
     border-radius: 10px;
+    background-color: #01896e;
+
 }
 
 .addForm button:hover{
-    background-color: #01896e;
+    background-color: #0e6553;
 }
 
 .table-container{
@@ -161,16 +163,27 @@ th{
     font-size: 14px;
     cursor: pointer;
     border-radius: .625rem;
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
   
-.moreBtn button:hover{
+.moreBtn button{
     background-color: rgb(3, 245, 3);
 }
+/* Change background color on hover */
+.moreBtn button:hover{
+    background-color: rgba(0, 110, 0, 0.771);
+}
   
+.deleteBtn button,
+.cancelBtn button {
+    background-color: rgb(254, 65, 65);
+}
+
+/* Change background color on hover */
 .deleteBtn button:hover,
 .cancelBtn button:hover {
-    background-color: rgb(254, 65, 65);
+    background-color: rgb(186, 4, 4); /* Red color */
 }
 
 

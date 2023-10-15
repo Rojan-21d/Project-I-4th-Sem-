@@ -29,7 +29,6 @@ if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
     $contact = trim($_POST['contact']);
@@ -59,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_FILES['profile_pic']['name'])) {
             // Validate and process the image upload
             $allowedExtensions = ['jpg', 'jpeg', 'png'];
-            $uploadDirectory = 'img/loadUploads/';
+            $uploadDirectory = 'img/profileUploads/';
         
             $imgName = $_FILES['profile_pic']['name'];
             $imgExtension = pathinfo($imgName, PATHINFO_EXTENSION);
@@ -168,6 +167,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             var password = document.getElementById("password").value;
             var phone = document.getElementById("contact").value; // Corrected ID
             
+            var reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+            if(!preg_match(reName, name)){
+                errors.push("Name must be like Rojan Dumaru");
+            }
+            
             if (name === "") {
                 errors.push("Name is required.");
             }
@@ -179,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             
             if (password !== "") { // Check if password is provided
-                if (password.length < 8 || password.length > 24) {
+                if (password.length < 8 || password.length > 24) { 
                     errors.push("Password must be between 8 and 24 characters.");
                 }
             }

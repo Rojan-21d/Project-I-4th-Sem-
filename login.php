@@ -88,7 +88,7 @@ if (isset($_POST['loginbtn'])) {
                     Password Invalid!
                 </div>
             <?php } ?>       
-            <form method="post" action="" class="login">
+            <form method="post" action="" class="login" autocomplete="off">
             <div class="input-group-login" >
                     <div class="input-field " >
                         <i class="fa-solid fa-user"></i>

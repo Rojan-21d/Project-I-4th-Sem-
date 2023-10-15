@@ -1,8 +1,16 @@
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../js/sweetalert.js"></script>
-
-<link rel="stylesheet" href="../css/sweetAlert.css">
-<link rel="stylesheet" href="../css/addtable.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/sweetalert.js"></script>
+    <link rel="stylesheet" href="../css/sweetAlert.css">
+    <link rel="stylesheet" href="../css/addtable.css">
+    <script src="js/imgPreview.js"></script>
+    <title>Update Load</title>
+</head>
+<body>
 
 <?php
 require 'databaseconnection.php';
@@ -18,27 +26,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $description = $_POST['description'];
     $weight = $_POST['weight'];
 
-    // Process the uploaded image only if a new file is selected
-    $imageDestination = '';
+    // Validate form fields
+    $errors = [];
 
-    if (!empty($_FILES['image']['tmp_name'])) {
-        $image = $_FILES['image'];
-        $imageFileName = $image['name'];
-        $imageTempName = $image['tmp_name'];
-        $imageDestination = 'img/imageUploads/' . $imageFileName;
-
-        // Move the uploaded image to a specific directory
-        if (move_uploaded_file($imageTempName, $imageDestination)) {
-            // Image uploaded successfully
-        } else {
-            // Failed to upload image
-            // echo "<script> alert('Failed to upload image.');</script>";
-            echo "<script>Swal.fire('Failed to upload image.');
-            </script>";
-        }
+    if (empty($name)) {
+        $errors[] = "Name is required.";
     }
 
-    $sql = "UPDATE loaddetails SET
+    if (empty($origin)) {
+        $errors[] = "Origin is required.";
+    }
+
+    if (empty($destination)) {
+        $errors[] = "Destination is required.";
+    }
+
+    if (empty($distance) || !is_numeric($distance)) {
+        $errors[] = "Distance must be a numeric value.";
+    }
+
+    if (empty($weight) || !is_numeric($weight)) {
+        $errors[] = "Weight must be a numeric value.";
+    }
+
+    // Display errors using SweetAlert
+    if (!empty($errors)) {
+        $errorMessages = join("<br>", $errors);
+        echo '<script>
+            Swal.fire({
+                icon: "error",
+                title: "Errors",
+                html: `' . $errorMessages . '`,
+            });
+        </script>';
+    } else {
+        
+        // Process the uploaded image only if a new file is selected
+        $imageDestination = '';
+        
+        if (!empty($_FILES['image']['tmp_name'])) {
+            $image = $_FILES['image'];
+            $imageFileName = $image['name'];
+            $imageTempName = $image['tmp_name'];
+            $imageDestination = 'img/imageUploads/' . $imageFileName;
+            
+            // Move the uploaded image to a specific directory
+            if (move_uploaded_file($imageTempName, $imageDestination)) {
+                // Image uploaded successfully
+            } else {
+                // Failed to upload image
+                // echo "<script> alert('Failed to upload image.');</script>";
+                echo "<script>Swal.fire('Failed to upload image.');
+                </script>";
+            }
+        }
+        
+        $sql = "UPDATE loaddetails SET
             name = ?,
             origin = ?,
             destination = ?,
@@ -46,36 +89,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             description = ?,
             weight = ?";
 
-    $params = [$name, $origin, $destination, $distance, $description, $weight];
-
-    // Update the image path only if a new image was uploaded
-    if (!empty($imageDestination)) {
-        $sql .= ", img_srcs = ?";
-        $params[] = $imageDestination;
-    }
-
-    $sql .= " WHERE id = ?";
-    $params[] = $id;
-
-    $stmt = $conn->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param(str_repeat('s', count($params)), ...$params);
-        if ($stmt->execute()) {
-            echo "<script> alert('Updated Sucessfully.');</script>";
-            // echo "<script> Swal.fire('Updated Sucessfully.');</script>";
-
-        } else {
-            echo "<script> alert('Update failed: " . $stmt->error . "');</script>";
-            // echo "<script> Swal.fire('Update failed: " . $stmt->error . "');</script>";
-
+        $params = [$name, $origin, $destination, $distance, $description, $weight];
+        
+        // Update the image path only if a new image was uploaded
+        if (!empty($imageDestination)) {
+            $sql .= ", img_srcs = ?";
+            
+            $params[] = $imageDestination;
         }
-        $stmt->close();
-    } else {
-        echo "<script> alert('Update query preparation failed: " . $conn->error . "');</script>";
-        // echo "<script> Swal.fire('Update query preparation failed: " . $conn->error . "');</script>";
-
+        
+        $sql .= " WHERE id = ?";
+        $params[] = $id;
+        
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+            if ($stmt->execute()) {
+                // echo "<script> alert('Updated Sucessfully.');</script>";
+                echo "<script> Swal.fire('Updated Sucessfully.');</script>";
+                
+            } else {
+                // echo "<script> alert('Update failed: " . $stmt->error . "');</script>";
+                echo "<script> Swal.fire('Update failed: " . $stmt->error . "');</script>";
+                
+            }
+            $stmt->close();
+        } else {
+            // echo "<script> alert('Update query preparation failed: " . $conn->error . "');</script>";
+            echo "<script> Swal.fire('Update query preparation failed: " . $conn->error . "');</script>";
+            
+        }
     }
 }
+
 
 // Fetch the load details for editing
 $sql = "SELECT * FROM loaddetails WHERE id = ?";
@@ -87,9 +133,10 @@ if ($stmt) {
     $row = $result->fetch_assoc();
     $stmt->close();
 } else {
-    echo "<script> alert('Load details fetch query preparation failed: " . $conn->error . "');</script>";
-    // echo "<script> Swal.fire('Load details fetch query preparation failed: " . $conn->error . "');</script>";
+    // echo "<script> alert('Load details fetch query preparation failed: " . $conn->error . "');</script>";
+    echo "<script> Swal.fire('Load details fetching failed: " . $conn->error . "');</script>";
 }
+
 ?>
 
 <div class="add-main">
@@ -122,8 +169,9 @@ if ($stmt) {
         <div class="data-input center">
             <label for="image">Image:</label>
             <input class="inpImg" type="file" id="image" name="image" accept="image/*">
+            <!-- <img src="<?php // echo $row['img_srcs']; ?>" alt="Load Picture" id="profilePicPreview">
+            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;" onchange="previewImage(event)"> -->
         </div>
-
         <div class="button-input">
             <input type="hidden" name="id" value="<?php echo $_SESSION['load_id']; ?>">
         </div>
@@ -131,4 +179,5 @@ if ($stmt) {
         <a href="../"><button type="button">Home</button></a>
     </form>
 </div>
-
+</body>
+</html>

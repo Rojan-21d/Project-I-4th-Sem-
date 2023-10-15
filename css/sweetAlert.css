@@ -37,23 +37,23 @@ body {
     background-color: #c0392b; /* Hover background color */
 }
 
-/* Change error text color */
-/* .swal2-content .error-list {
-    color: #fff;
-} */
-
-.error-list{
-    color: whitesmoke;
+.error-list {
+    color: rgb(255, 255, 255); /* Error list text color */
+    font-size: 1rem; /* Error list font size */
+    /* Add any other styles you want for the error list */
 }
 
 /* Default button color */
 .swal2-popup .swal2-styled {
     background-color: #7dcabb;
     color: white;
-  }
-  
-  /* Button hover color */
-  .swal2-popup .swal2-styled:hover {
+}
+
+/* Button hover color */
+.swal2-popup .swal2-styled:hover {
     background-color: #01896e;
-  }
-  
+}
+
+.swal2-popup .swal2-html-container {
+    color: whitesmoke; /* Error message text color */
+}

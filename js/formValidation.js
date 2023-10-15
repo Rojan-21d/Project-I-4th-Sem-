@@ -7,6 +7,11 @@ function validateForm() {
     var password = document.getElementById("password").value;
     var phone = document.getElementById("phone").value;
     
+    var reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+    if(!preg_match(reName, name)){
+        errors.push("Name must be like Rojan Dumaru");
+    }
+    
     if (name === "") {
         errors.push("Name is required.");
     }
