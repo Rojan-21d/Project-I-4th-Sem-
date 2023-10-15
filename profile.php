@@ -33,6 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 
+    $reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+    if (!preg_match($reName, $name)) {
+        $errors[] = "Name must be like 'Rojan Dumaru'";
+    }
+
     if (empty($name) || empty($email) || empty($contact) || empty($address)) {
         $errors[] = "PHP All fields are required";
     }
