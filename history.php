@@ -18,10 +18,18 @@
     $result = $conn->query($sql);
 ?>
 
-<link rel="stylesheet" href="css/headerfooterstyle.css">
-<link rel="stylesheet" href="css/maincontentstyle.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/headerfooterstyle.css">
+    <link rel="stylesheet" href="css/maincontentstyle.css">
+    <title>History</title>
+</head>
+<body>
+    
 
-<title>History</title>
 <div class="congmain">
     <div class="table-container">
         <div class="head">
@@ -73,7 +81,7 @@
                                     <button type='submit'>More</button>
                                 </form>
                     
-                                <form action='backend/moredeleteload.php' method='post' class='cancelBtn'>
+                                <form action='backend/moredeleteload.php' method='post' class='cancelBtn' >
                                     <input type='hidden' name='action' value='cancel'>
                                     <input type='hidden' name='id' value='" . $load_id . "'>
                                     <input type='hidden' name='shipment_id' value='" . $shipment_id . "'>
@@ -92,8 +100,10 @@
         </table>
     </div>
 </div>
-
+<script src="js/confirmationSA.js"></script>
 </div>
 <?php
     include 'layout/footer.php';
 ?>
+</body>
+</html>

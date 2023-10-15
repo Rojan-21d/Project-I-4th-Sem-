@@ -119,7 +119,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                     <div class='takenby description-more'>
                         <h3>Load By</h3>";
                         
-                    $sql3 = "SELECT consignordetails.id, consignordetails.name, consignordetails.email, consignordetails.address, consignordetails.contact
+                    $sql3 = "SELECT consignordetails.id, consignordetails.name, consignordetails.email, consignordetails.address, consignordetails.contact, consignordetails.img_srcs
                     FROM consignordetails
                     INNER JOIN shipment ON consignordetails.id = shipment.consignor_id
                     WHERE shipment.load_id = '$id'";
@@ -138,6 +138,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                         } else {
                             // Displaying
                             echo '<ul>';
+                            echo '<li><img src="../'. $rowShip["img_srcs"]. '" style="height: 85px; width: auto;"></li>';
                             echo '<li>Name: '. $rowShip["name"]. '</li>';
                             echo '<li>Email: '. $rowShip["email"]. '</li>';
                             echo '<li>Address: '. $rowShip["address"]. '</li>';
@@ -151,7 +152,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                 echo "<div class='more-action description-more'>
                 <h3>Action</h3>
                 <div class='td-center'>
-                    <form action='' method='post' class='cancelBtn'>
+                    <form action='' method='post' class='cancelBtn' onsubmit=\"confirmCancel(event)\">
                         <input type='hidden' name='action' value='cancel'>
                         <input type='hidden' name='id' value='" . $id . "'>
                         <input type='hidden' name='shipment_id' value='" . $row['id'] . "'> <!--passing shipment id-->
@@ -168,7 +169,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                 <div class='takenby description-more'>
                     <h3>Booked By</h3>";
                     
-                $sql3 = "SELECT carrierdetails.id, carrierdetails.name, carrierdetails.email, carrierdetails.address, carrierdetails.contact
+                $sql3 = "SELECT carrierdetails.id, carrierdetails.name, carrierdetails.email, carrierdetails.address, carrierdetails.contact, carrierdetails.img_srcs
                 FROM carrierdetails
                 INNER JOIN shipment ON carrierdetails.id = shipment.carrier_id
                 WHERE shipment.load_id = '$id'";
@@ -187,6 +188,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                     } else {
                         // Displaying
                         echo '<ul>';
+                        echo '<li><img src="../'. $rowShip["img_srcs"]. '" style="height: 85px; width: auto;"></li>';
                         echo '<li>Name: '. $rowShip["name"]. '</li>';
                         echo '<li>Email: '. $rowShip["email"]. '</li>';
                         echo '<li>Address: '. $rowShip["address"]. '</li>';
