@@ -7,7 +7,7 @@
     <script src="../js/sweetalert.js"></script>
     <link rel="stylesheet" href="../css/sweetAlert.css">
     <link rel="stylesheet" href="../css/addtable.css">
-    <script src="js/imgPreview.js"></script>
+    <script src="../js/imgPreview.js"></script>
     <title>Update Load</title>
 </head>
 <body>
@@ -142,6 +142,13 @@ if ($stmt) {
 <div class="add-main">
     <h2>Edit Load Details</h2>
     <form action="" method="POST" enctype="multipart/form-data" class="addForm">
+        <div class="image-upload">
+            <!-- <input class="inpImg" type="file" id="image" name="image" accept="image/*"> -->
+            <img src="../<?php echo $row['img_srcs']; ?>" alt="Load Picture" id="PicPreview">
+            <input type="file" name="image" id="pic" accept="image/*" style="display: none;" onchange="previewImage(event)">
+            <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
+        </div>
+        
         <div class="data-input">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="<?php echo $row['name'] ?? ''; ?>">
@@ -166,12 +173,6 @@ if ($stmt) {
             <label for="weight">Weight (Tons):</label>
             <input type="number" id="weight" name="weight" value="<?php echo $row['weight'] ?? ''; ?>">
         </div>
-        <div class="data-input center">
-            <label for="image">Image:</label>
-            <input class="inpImg" type="file" id="image" name="image" accept="image/*">
-            <!-- <img src="<?php // echo $row['img_srcs']; ?>" alt="Load Picture" id="profilePicPreview">
-            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;" onchange="previewImage(event)"> -->
-        </div>
         <div class="button-input">
             <input type="hidden" name="id" value="<?php echo $_SESSION['load_id']; ?>">
         </div>
@@ -179,5 +180,10 @@ if ($stmt) {
         <a href="../"><button type="button">Home</button></a>
     </form>
 </div>
+<script>
+        function openFileInput() {
+        document.getElementById('pic').click();
+    }
+</script>
 </body>
 </html>

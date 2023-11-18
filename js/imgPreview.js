@@ -1,12 +1,12 @@
 // imgPreview.js
 function previewImage(event) {
     var reader = new FileReader();
-    var imagePreview = document.getElementById('profilePicPreview');
+    var imagePreview = document.getElementById('PicPreview');
     reader.onload = function() {
         imagePreview.src = reader.result;
     }
 
-    const fileInput = document.getElementById('profile_pic');
+    const fileInput = document.getElementById('pic');
     const selectedFile = fileInput.files[0];
     if (selectedFile) {
         const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;

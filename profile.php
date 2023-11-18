@@ -137,8 +137,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form action="" method="POST" enctype="multipart/form-data">
         <div class="profile-picture">
-            <img src="<?php echo $row['img_srcs']; ?>" alt="Profile Picture" id="profilePicPreview">
-            <input type="file" name="profile_pic" id="profile_pic" accept="image/*" style="display: none;" onchange="previewImage(event)">
+            <img src="<?php echo $row['img_srcs']; ?>" alt="Profile Picture" id="PicPreview">
+            <input type="file" name="profile_pic" id="pic" accept="image/*" style="display: none;" onchange="previewImage(event)">
             <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
         </div>
 
@@ -236,7 +236,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     function openFileInput() {
-        document.getElementById('profile_pic').click();
+        document.getElementById('pic').click();
     }
 
     function enableEdit(field) {
