@@ -117,12 +117,12 @@ try {
     ADD UNIQUE (`reset_otp_hash`); 
     ");
 
-    $pdo->exec("
-    ALTER TABLE `admininfo` 
-    ADD `reset_otp_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
-    ADD `reset_otp_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_otp_hash`, 
-    ADD UNIQUE (`reset_otp_hash`); 
-    ");
+    // $pdo->exec("
+    // ALTER TABLE `admininfo` 
+    // ADD `reset_otp_hash` VARCHAR(64) NULL DEFAULT NULL AFTER `password`, 
+    // ADD `reset_otp_expires_at` DATETIME NULL DEFAULT NULL AFTER `reset_otp_hash`, 
+    // ADD UNIQUE (`reset_otp_hash`); 
+    // ");
 
 
     echo "Database and tables created successfully.";
