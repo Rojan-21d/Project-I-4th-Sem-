@@ -145,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="<?php echo isset($row['name']) ? $row['name'] : ''; ?>" readonly>
-            <button type="button" class="edit-button" onclick="enableEdit('name')">Edit</button>
+            <button type="button" class="edit-button" onclick="enableEdit('name')">Edit</button>    
         </div>
         <div class="form-group">
             <label for="contact">Contact:</label>

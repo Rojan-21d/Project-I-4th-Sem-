@@ -8,6 +8,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+date_default_timezone_set('Asia/Kathmandu');
 $otp = $_SESSION['otp'];
 $otp_hash = hash("sha256", $otp);
 
@@ -24,6 +25,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
+
+// Revalidating otp once again so that user will not be able to change password if the time is expired
 if ($user === null) {
     echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -66,6 +69,7 @@ if (isset($_POST["verify"])) {
     $password = $_POST['password'];
     $password_confirmation = $_POST['password_confirmation'];
     
+    // Password validation rules
     if (strlen($password) < 8 || strlen($password) > 24) {
         $errors[] = "Password must be between 8 and 24 characters";
     }
@@ -166,7 +170,7 @@ if (!empty($errors)) {
         </div>
     </div>
     <script src="../js/showpwd.js"></script>
-    <!-- Confirm password validaion  -->
+    <!-- Confirm password validaion from js -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.querySelector(".login");

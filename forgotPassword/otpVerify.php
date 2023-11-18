@@ -2,6 +2,7 @@
 if(isset($_POST["verify"])){
     $otp = $_POST["otp"];
 
+    date_default_timezone_set('Asia/Kathmandu');
     $otp_hash = hash("sha256", $otp); // This should be $token, not $otp
 
     require '../backend/databaseconnection.php';
@@ -55,6 +56,7 @@ if(isset($_POST["verify"])){
                     <div class="input-field " >
                         <input type="text" maxlength="6" inputmode="numeric" placeholder="OTP Here" name="otp" id="otp" required style="padding-left: 15px;">
                     </div>
+                    <!-- Error Message Display  -->
                     <?php if (isset($error_message)) : ?>
                         <div class="errorOTP error-message" id="errorOTP">
                             <?php echo $error_message; ?>

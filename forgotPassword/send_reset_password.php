@@ -8,6 +8,7 @@ session_start();
 
 $email = isset($_POST['email']) ? $_POST['email'] : $_SESSION['resetEmail'];
 $userSelects = isset($_POST['userselects']) ? $_POST['userselects'] : $_SESSION['userSelects'];
+$_SESSION['resetEmail'] = $email;
 
 $randomNumberOTP = mt_rand(100000, 999999);
 $otp_hash = hash("sha256", $randomNumberOTP);
@@ -60,7 +61,6 @@ END;
         <?php
         exit;
     } catch (Exception $e) {
-        // Display error message using SweetAlert
         ?>
         .<script>
         Swal.fire({
@@ -75,6 +75,7 @@ END;
 }
 ?>
 
+<!-- Display Mail Send even with wrong email to improve security -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     Swal.fire({
