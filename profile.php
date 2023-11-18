@@ -165,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" placeholder="Enter new password">
-            <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
+            <button type="button" class="edit-button" onclick="enableEdit('password')">Edit</button>
         </div>
 
         <div class="form-group">

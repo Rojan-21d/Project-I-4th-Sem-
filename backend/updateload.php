@@ -68,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $image = $_FILES['image'];
             $imageFileName = $image['name'];
             $imageTempName = $image['tmp_name'];
-            $imageDestination = 'img/imageUploads/' . $imageFileName;
+            $imageDestination = 'img/loadUploads/' . $imageFileName;
             
             // Move the uploaded image to a specific directory
-            if (move_uploaded_file($imageTempName, $imageDestination)) {
+            if (move_uploaded_file($imageTempName, "../". $imageDestination)) {
                 // Image uploaded successfully
             } else {
                 // Failed to upload image
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 }
 
 
-// Fetch the load details for editing
+// Fetch the load details to display in form for editing
 $sql = "SELECT * FROM loaddetails WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt) {
