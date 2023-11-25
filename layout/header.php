@@ -22,7 +22,7 @@
                 <div class="sub-menu">
                     <div class="user-info">
                         <img src="<?php echo $_SESSION['profilePic'] ?>">
-                         <h2><?php echo $_SESSION['name'];?></h2>
+                        <h2><?php echo $_SESSION['name'];?></h2>
                     </div>
                     <hr>
                     <a href="profile.php" class="sub-menu-link">
