@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <script src="../js/sweetalert.js"></script>
     <link rel="stylesheet" href="../css/sweetAlert.css">
     <link rel="stylesheet" href="../css/addtable.css">
@@ -13,115 +13,25 @@
 <body>
 
 <?php
+// Include the file for database connection
 require 'databaseconnection.php';
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    // The form has been submitted and 'id' key exists in $_POST
-    $id = $_POST['id'];
-    $name = $_POST["name"];
-    $origin = $_POST["origin"];
-    $destination = $_POST['destination'];
-    $distance = $_POST['distance'];
-    $description = $_POST['description'];
-    $weight = $_POST['weight'];
-
-    // Validate form fields
-    $errors = [];
-
-    if (empty($name)) {
-        $errors[] = "Name is required.";
-    }
-
-    if (empty($origin)) {
-        $errors[] = "Origin is required.";
-    }
-
-    if (empty($destination)) {
-        $errors[] = "Destination is required.";
-    }
-
-    if (empty($distance) || !is_numeric($distance)) {
-        $errors[] = "Distance must be a numeric value.";
-    }
-
-    if (empty($weight) || !is_numeric($weight)) {
-        $errors[] = "Weight must be a numeric value.";
-    }
-
-    // Display errors using SweetAlert
-    if (!empty($errors)) {
-        $errorMessages = join("<br>", $errors);
-        echo '<script>
-            Swal.fire({
-                icon: "error",
-                title: "Errors",
-                html: `' . $errorMessages . '`,
-            });
-        </script>';
-    } else {
-        
-        // Process the uploaded image only if a new file is selected
-        $imageDestination = '';
-        
-        if (!empty($_FILES['image']['tmp_name'])) {
-            $image = $_FILES['image'];
-            $imageFileName = $image['name'];
-            $imageTempName = $image['tmp_name'];
-            $imageDestination = 'img/loadUploads/' . $imageFileName;
-            
-            // Move the uploaded image to a specific directory
-            if (move_uploaded_file($imageTempName, "../". $imageDestination)) {
-                // Image uploaded successfully
-            } else {
-                // Failed to upload image
-                // echo "<script> alert('Failed to upload image.');</script>";
-                echo "<script>Swal.fire('Failed to upload image.');
-                </script>";
-            }
-        }
-        
-        $sql = "UPDATE loaddetails SET
-            name = ?,
-            origin = ?,
-            destination = ?,
-            distance = ?,
-            description = ?,
-            weight = ?";
-
-        $params = [$name, $origin, $destination, $distance, $description, $weight];
-        
-        // Update the image path only if a new image was uploaded
-        if (!empty($imageDestination)) {
-            $sql .= ", img_srcs = ?";
-            
-            $params[] = $imageDestination;
-        }
-        
-        $sql .= " WHERE id = ?";
-        $params[] = $id;
-        
-        $stmt = $conn->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param(str_repeat('s', count($params)), ...$params);
-            if ($stmt->execute()) {
-                // echo "<script> alert('Updated Sucessfully.');</script>";
-                echo "<script> Swal.fire('Updated Sucessfully.');</script>";
-                
-            } else {
-                // echo "<script> alert('Update failed: " . $stmt->error . "');</script>";
-                echo "<script> Swal.fire('Update failed: " . $stmt->error . "');</script>";
-                
-            }
-            $stmt->close();
-        } else {
-            // echo "<script> alert('Update query preparation failed: " . $conn->error . "');</script>";
-            echo "<script> Swal.fire('Update query preparation failed: " . $conn->error . "');</script>";
-            
-        }
-    }
+// Function to display alerts using SweetAlert
+function showAlert($message, $type = 'error') {
+    echo "<script>
+        Swal.fire({
+            icon: '$type',
+            title: '$type',
+            html: '$message',
+        });
+    </script>";
 }
 
+// Function to sanitize user input
+function validateInput($data) {
+    return htmlspecialchars(trim($data));
+}
 
 // Fetch the load details to display in form for editing
 $sql = "SELECT * FROM loaddetails WHERE id = ?";
@@ -133,10 +43,90 @@ if ($stmt) {
     $row = $result->fetch_assoc();
     $stmt->close();
 } else {
-    // echo "<script> alert('Load details fetch query preparation failed: " . $conn->error . "');</script>";
+    // Display error if load details fetching fails
     echo "<script> Swal.fire('Load details fetching failed: " . $conn->error . "');</script>";
 }
 
+// Handling form submission on POST request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $id = $_POST['id'];
+    // Retrieving form data
+    $name = $_POST["name"];
+    $origin = $_POST["origin"];
+    $destination = $_POST['destination'];
+    $distance = $_POST['distance'];
+    $description = $_POST['description'];
+    $weight = $_POST['weight'];
+
+    // Validating form fields
+    $errors = [];
+    if (empty($name) || empty($origin) || empty($destination) || empty($distance) || empty($weight)) {
+        $errors[] = "All fields are required.";
+    } 
+    if (!is_numeric($distance)) {
+        $errors[] = "Distance must be a numeric value.";
+    }
+    if (!is_numeric($weight)) {
+        $errors[] = "Weight must be a numeric value.";
+    }
+    // Displaying errors using SweetAlert
+    if (!empty($errors)) {
+        $errorMessages = implode("<br>", $errors);
+        showAlert($errorMessages);
+    } else {
+        $imageDestination = '';        
+        // Process the uploaded image only if a new file is selected
+        if (!empty($_FILES['image']['tmp_name'])) {
+            // Check and delete the existing image if it's a default image
+            if (file_exists($row['img_srcs']) && strpos($row['img_srcs'], 'defaultImg') == false){
+                unlink($row['img_srcs']);
+            }
+            $image = $_FILES['image'];
+            $imageFileName = $image['name'];
+            $imageTempName = $image['tmp_name'];
+            $imageDestination = 'img/loadUploads/' . $imageFileName;                    
+            // Move the uploaded image to a specific directory
+            if (move_uploaded_file($imageTempName, "../". $imageDestination)) {
+                // Image uploaded successfully
+            } else {
+                // Failed to upload image
+                echo "<script>Swal.fire('Failed to upload image.');</script>";
+            }
+        }
+
+
+        // Update load details in the database
+        $sql = "UPDATE loaddetails SET
+            name = ?,
+            origin = ?,
+            destination = ?,
+            distance = ?,
+            description = ?,
+            weight = ?";
+
+        $params = [$name, $origin, $destination, $distance, $description, $weight];
+        // Update the image path only if a new image was uploaded
+        if (!empty($imageDestination)) {
+            $sql .= ", img_srcs = ?";
+            $params[] = $imageDestination;
+        }
+        $sql .= " WHERE id = ?";
+        $params[] = $id;
+        
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+            if ($stmt->execute()) {
+                showAlert('Updated Successfully', 'success');
+            } else {
+                showAlert('Update Failed: ' . $stmt->error);                
+            }
+            $stmt->close();
+        } else {
+            showAlert('Update Query Preparation Failed: ' . $conn->error);            
+        }
+    }
+}
 ?>
 
 <div class="add-main">
@@ -148,7 +138,6 @@ if ($stmt) {
             <input type="file" name="image" id="pic" accept="image/*" style="display: none;" onchange="previewImage(event)">
             <button type="button" class="edit-button" onclick="openFileInput()">Edit</button>
         </div>
-        
         <div class="data-input">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="<?php echo $row['name'] ?? ''; ?>">

@@ -20,6 +20,7 @@ if ($userSelects == "carrier") {
     $table = "consignordetails";
 }
 
+// For displaying from DB
 $result = $conn->query("SELECT * FROM $table WHERE id = " . $_SESSION['id']);
 
 if ($result && $result->num_rows > 0) {
@@ -33,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 
-    $reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
-    if (!preg_match($reName, $name)) {
+    $reNameRegEx = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+    if (!preg_match($reNameRegEx, $name)) {
         $errors[] = "Name must be like 'Rojan Dumaru'";
     }
 
@@ -56,37 +57,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($errors)) {
         if (!empty($_FILES['profile_pic']['name'])) {
+            if (file_exists($row['img_srcs']) && strpos($row['img_srcs'], 'defaultImg') == false){
+                unlink($row['img_srcs']);
+            }
             $allowedExtensions = ['jpg', 'jpeg', 'png'];
             $uploadDirectory = 'img/profileUploads/';
-        
+            
             $imgName = $_FILES['profile_pic']['name'];
             $imgExtension = pathinfo($imgName, PATHINFO_EXTENSION);
-        
+            
             if (!in_array($imgExtension, $allowedExtensions)) {
                 $errors[] = "PHP Invalid image format. Allowed formats: JPG, JPEG, PNG.";
             } else {
                 $uploadedFilePath = $uploadDirectory . $imgName;
-        
                 if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $uploadedFilePath)) {
                     $updateSql = "UPDATE $table SET img_srcs = '$uploadedFilePath',";
                 } else {
                     $errors[] = "PHP Failed to upload the new image";
                 }
-            }
+            }            
+        }
         } else {
-            $updateSql = "UPDATE $table SET";
-        }
+        $updateSql = "UPDATE $table SET";
+    }
+    
+    $updateSql .= " name = '$name', contact = '$contact', email = '$email', address = '$address'";
+    
+    if (!empty($newPassword)) {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $updateSql .= ", password = '$hashedPassword'";
+    }
         
-        $updateSql .= " name = '$name', contact = '$contact', email = '$email', address = '$address'";
-        
-        if (!empty($newPassword)) {
-            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            $updateSql .= ", password = '$hashedPassword'";
-        }
-        
-        $updateSql .= " WHERE id = " . $_SESSION['id'];
-
-        if ($conn->query($updateSql) === TRUE) {
+    $updateSql .= " WHERE id = " . $_SESSION['id'];
+    
+    if ($conn->query($updateSql) === TRUE) {
             $_SESSION['name'] = $name;
             $_SESSION['email'] = $email;
             $_SESSION['contact'] = $contact;
@@ -108,12 +112,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errorMessages = implode("<br>", $errors);
         echo '<div class="error-message">' . $errorMessages . '</div>';
     }
-}
+    
 ?>
 
 <!DOCTYPE html>
 <html>
-<head>
+    <head>
 <title>User Profile</title>
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
@@ -180,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             event.preventDefault();
         }
     });
-
+    
     function validateForm() {
         var errors = [];
         var name = document.getElementById("name").value;
@@ -192,7 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!reName.test(name)) {
             errors.push("Name must be like 'Rojan Dumaru'");
         }
-
+        
         if (name.trim() === "") {
             errors.push("Name is required.");
         }
@@ -208,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 errors.push("Password must be between 8 and 24 characters.");
             }
         }
-
+        
         if (phone.trim() === "") {
             errors.push("Phone number is required.");
         } else if (phone.length !== 10) {
@@ -223,10 +227,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             title: 'Sign Up Error',
             html: errorMessage,
             showCloseButton: true,
-            });  
+        });  
             return false;
         }
-
+        
         return true;
     }
 
@@ -234,15 +238,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         var re = /\S+@\S+\.\S+/;
         return re.test(email);
     }
-
+    
     function openFileInput() {
         document.getElementById('pic').click();
     }
-
+    
     function enableEdit(field) {
             document.getElementById(field).readOnly = false;
         }
         
-</script>
+    </script>
 </body>
 </html>
+
+}
