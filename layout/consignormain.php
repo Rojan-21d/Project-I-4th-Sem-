@@ -6,7 +6,7 @@
 <title>Home-Consignor</title>
 
 <?php
-$sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "'";
+$sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "' ORDER BY dateofpost DESC";
 $result = $conn->query($sql);
 ?>
 <div class="congmain">
@@ -38,15 +38,8 @@ $result = $conn->query($sql);
                         $load_id = $row['id'];
 
                         // Getting status
-                        $stat = "";
-                        if ($row['status'] == "notBooked") {
-                            $stat = "Not Booked";
-                        } elseif ($row['status'] == "booked") {
-                            $stat = "Booked";
-                        } elseif ($row['status'] == "delivered") {
-                            $stat = "Delivered";
-                        }
-
+                        $stat = $row['status'];
+                        
                         echo "<tr class='tr-bottom'>
                         <td>" . $i . "</td>
                         <td>" .$row['name'] . "</td>
@@ -61,7 +54,7 @@ $result = $conn->query($sql);
                         } elseif ($row['status'] == "delivered") {
                             echo "<p class='status delivered'>Delivered</p>";
                         }
-
+                        
                         echo "</td>
                         <td>
                             <div class='td-center'>

@@ -2,11 +2,12 @@
     session_start();
 
     // Check if the user is not logged in
-    if(!isset($_SESSION['email'])) {
+    if (!isset($_SESSION['email'])) {
         // Redirect the user to the login page or any other authentication page
         header("Location: login.php");
         exit;
     }
+
     // Database connection
     require 'backend/databaseconnection.php';
     include 'layout/header.php';
@@ -23,87 +24,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
     <link rel="stylesheet" href="css/headerfooterstyle.css">
     <link rel="stylesheet" href="css/maincontentstyle.css">
-    <title>History</title>
 </head>
 <body>
-    
+    <div class="congmain">
+        <div class="table-container">
+            <div class="head">
+                <h2>Your History</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="2%">S.N.</th>
+                        <th width="40%">Name</th>
+                        <th width="5%">Photo</th>
+                        <th width="10%">Date of Uploaded</th>
+                        <th width="15%">Status</th>
+                        <th width="20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        $i = 1; // Initialize $i variable
+                        while ($row = $result->fetch_assoc()) {
+                            $load_id = $row['id'];
+                            $shipment_id = $row['shipment_id'];
 
-<div class="congmain">
-    <div class="table-container">
-        <div class="head">
-             <h2>Your History</h2>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th width="2%">S.N.</th>
-                    <th width="40%">Name</th>
-                    <th width="5%">Photo</th>
-                    <th width="10%">Date of Uploaded</th>
-                    <th width="15%">Status</th>
-                    <th width="20%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    $i = 1; // Initialize $i variable
-                    while ($row = $result->fetch_assoc()) {
+                            $stat = ($row['status'] == "booked") ? "Booked" : (($row['status'] == "delivered") ? "Delivered" : "");
 
-                        // Access the columns using $row['column_name']
-                        $load_id = $row['id'];
-                        $shipment_id = $row['shipment_id'];
+                            echo "<tr class='tr-bottom'>
+                            <td>" . $i . "</td>
+                            <td>" . $row['name'] . "</td>
+                            <td><img src='" . $row['img_srcs'] . "' > </td>
+                            <td>" . $row['dateofpost'] . "</td>
+                            <td>" . $stat . "</td>
+                            <td>
+                                <div class='td-center'>
+                                    <form action='backend/moredeleteload.php' method='post' class='moreBtn'>
+                                        <input type='hidden' name='action' value='more'>
+                                        <input type='hidden' name='id' value='" . $load_id . "'>
+                                        <input type='hidden' name='shipment_id' value='" . $shipment_id . "'>
+                                        <button type='submit'>More</button>
+                                    </form>";
                         
-                        // Getting status
-                        $stat = "";
-
-                        if ($row['status'] == "booked") {
-                            $stat = "Booked";
-                        } elseif ($row['status'] == "delivered") {
-                            $stat = "Delivered";
-                        }
-
-                        echo "<tr class='tr-bottom'>
-                        <td>" . $i . "</td>
-                        <td>" .$row['name'] . "</td>
-                        <td><img src='" . $row['img_srcs'] . "' > </td>
-                        <td>" . $row['dateofpost'] . "</td>
-                        <td>" . $stat . "</td>";
-                        echo "</td>
-                        <td>
-                            <div class='td-center'>
-                                <form action='backend/moredeleteload.php' method='post' class='moreBtn'>
-                                    <input type='hidden' name='action' value='more'>
-                                    <input type='hidden' name='id' value='" . $load_id . "'>
-                                    <input type='hidden' name='shipment_id' value='" . $shipment_id ."'>
-                                    <button type='submit'>More</button>
-                                </form>
-                    
-                                <form action='backend/moredeleteload.php' method='post' class='cancelBtn' >
+                        if ($stat !== 'Delivered') {
+                            echo "<form action='backend/moredeleteload.php' method='post' class='cancelBtn' onsubmit=\"confirmCancel(event)\">
                                     <input type='hidden' name='action' value='cancel'>
                                     <input type='hidden' name='id' value='" . $load_id . "'>
                                     <input type='hidden' name='shipment_id' value='" . $shipment_id . "'>
                                     <button type='submit'>Cancel</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>";
-                        $i++; // Increment $i after each iteration
+                                </form>";
+                        }
+                        
+                        echo "</div>
+                            </td>
+                        </tr>";
+                        
+                            $i++; // Increment $i after each iteration
+                        }
+                    } else {
+                        echo "<tr><td colspan='6'>No Records Found</td></tr>";                    
                     }
-                }else{
-                    echo "<tr><td colspan='6'>No Records Found</td></tr>";                    
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<script src="js/confirmationSA.js"></script>
-</div>
-<?php
-    include 'layout/footer.php';
-?>
+    <?php
+        include 'layout/footer.php';
+    ?>
+    <script src="js/confirmationSA.js"></script>
 </body>
 </html>
