@@ -6,6 +6,18 @@
 <?php
 require '../backend/databaseconnection.php';
 
+// Function to display alerts using SweetAlert
+function showAlert($message, $type = 'error') {
+    $title = ($type == "success") ? "Success" : (($type == "error") ? "Error" : "");
+    echo "<script>
+        Swal.fire({
+            icon: '$type',
+            title: '$title',
+            html: '$message',
+        });
+    </script>";
+}
+
 // Check if a button is selected and assign a class to highlight it
 $carrierSelected = isset($_POST['carrier']) ? 'selected' : '';
 $consignorSelected = isset($_POST['consignor']) ? 'selected' : '';
@@ -42,6 +54,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
     if (!empty($deleteTable)) {
         $sql = "DELETE FROM $deleteTable WHERE id=$id";
         $result = mysqli_query($conn, $sql);
+        $img_srcs = $_POST['img_srcs'];
+        if (file_exists("../".$img_srcs) && strpos($img_srcs, 'defaultImg') == false){
+            unlink("../".$img_srcs);
+        }
+        showAlert("Deleted Successfully.", "success");
     }
 }
 
@@ -114,6 +131,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
                             <input type='hidden' name='action' value='delete'>
                             <input type='hidden' name='id' value='" . $id . "'> <!-- Sending id -->
                             <input type='hidden' name='deleteTable' value='" . $table . "'> <!-- Sending table selected -->
+                            <input type='hidden' name='img_srcs' value='". htmlspecialchars($row['img_srcs'], ENT_QUOTES, 'UTF-8') ."'>
                             <button type='submit'>Delete</button>
                         </form>
                         </td>";
