@@ -75,6 +75,7 @@ $result = $conn->query($sql);
                                 <form action='backend/moredeleteload.php' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                                     <input type='hidden' name='action' value='delete'>
                                     <input type='hidden' name='id' value='" . $load_id . "'>
+                                    <input type='hidden' name='img_srcs' value='". htmlspecialchars($row['img_srcs'], ENT_QUOTES, 'UTF-8') ."'>
                                     <button type='submit' >Delete</button>
                                 </form>
                             </div>

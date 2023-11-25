@@ -34,18 +34,23 @@ function validateInput($data) {
 }
 
 // Fetch the load details to display in form for editing
-$sql = "SELECT * FROM loaddetails WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt) {
-    $stmt->bind_param('i', $_SESSION['load_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
-} else {
-    // Display error if load details fetching fails
-    echo "<script> Swal.fire('Load details fetching failed: " . $conn->error . "');</script>";
+function fetchLoadDetails($conn, $loadId) {
+    $sql = "SELECT * FROM loaddetails WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param('i', $loadId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+        return $row;
+    } else {
+        showAlert("Load details fetching failed: " . $conn->error);
+        return false;
+    }
 }
+
+$row = fetchLoadDetails($conn, $_SESSION['load_id']);
 
 // Handling form submission on POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
@@ -77,9 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         $imageDestination = '';        
         // Process the uploaded image only if a new file is selected
         if (!empty($_FILES['image']['tmp_name'])) {
-            // Check and delete the existing image if it's a default image
-            if (file_exists($row['img_srcs']) && strpos($row['img_srcs'], 'defaultImg') == false){
-                unlink($row['img_srcs']);
+            // Check and delete the existing image if it's not a default image
+            if (file_exists("../".$row['img_srcs']) && strpos($row['img_srcs'], 'defaultImg') == false){
+                unlink("../".$row['img_srcs']);
             }
             $image = $_FILES['image'];
             $imageFileName = $image['name'];
@@ -93,7 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
                 echo "<script>Swal.fire('Failed to upload image.');</script>";
             }
         }
-
 
         // Update load details in the database
         $sql = "UPDATE loaddetails SET
@@ -127,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         }
     }
 }
+$row = fetchLoadDetails($conn, $_SESSION['load_id']);
 ?>
 
 <div class="add-main">

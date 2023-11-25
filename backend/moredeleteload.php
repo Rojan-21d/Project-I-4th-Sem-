@@ -14,6 +14,7 @@
 
 <?php
 session_start();
+require 'databaseconnection.php'; // Database connection
 
 // Check if the user is not logged in
 if (!isset($_SESSION['email'])) {
@@ -21,7 +22,19 @@ if (!isset($_SESSION['email'])) {
     header("Location: ../login.php");
     exit;
 }
-require 'databaseconnection.php'; // Database connection
+
+// Function to display alerts using SweetAlert
+function showAlert($message, $type = 'error') {
+    echo "<script>
+        Swal.fire({
+            icon: '$type',
+            title: '$type',
+            html: '$message',
+        }).then((result) => {
+            window.location.href = '../home.php';
+        });
+    </script>";
+}
 
 if (isset($_POST['action']) && isset($_POST['id'])) {
     $id = $_POST['id'];
@@ -33,7 +46,22 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         // Delete the row
         $sql = "DELETE FROM loaddetails WHERE id = '$id'";
         $result = $conn->query($sql);
-        header('Location:../home.php');
+        $img_srcs = $_POST['img_srcs'];
+        if (file_exists("../".$img_srcs) && strpos($img_srcs, 'defaultImg') == false){
+            unlink("../".$img_srcs);
+        }
+        // echo '<script>
+        // Swal.fire({
+        //     title: "Deleted",
+        //     icon: "success",
+        //     text: "Load Deleted Successfully.",
+        //     confirmButtonText: "OK"
+        // }).then((result) => {
+        //         window.location.href = "../home.php";
+        // });
+        // </script>';
+        showAlert("Load Deleted Successfully.", "success");
+
     } elseif ($action == 'edit') {
         // Update Load Details
         header("Location: updateload.php");
@@ -49,37 +77,24 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         
             // Commit the transaction
             $conn->commit();
-        
-            echo '<script>
-                Swal.fire({
-                    title: "Canceled",
-                    icon: "success",
-                    text: "Load Canceled successfully.",
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "../home.php";
-                    }
-                });
-            </script>';
+            showAlert("Load Canceled Successfully.", "success");
             exit;
         } catch (\Throwable $th) {
             $conn->rollback();
-            echo '<script>
-                Swal.fire({
-                    title: "Error",
-                    icon: "error",
-                    html: "ERROR! ' . $th . '",
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "../home.php";
-                    }
-                });
-            </script>';
+            // echo '<script>
+            //     Swal.fire({
+            //         title: "Error",
+            //         icon: "error",
+            //         html: "ERROR! ' . $th . '",
+            //         confirmButtonText: "OK"
+            //     }).then((result) => {
+            //             window.location.href = "../home.php";
+            //     });
+            // </script>';
+            showAlert("ERROR! ' . $th . '", "error");
             exit();
         }    
-    }elseif ($action == 'more') {
+    } elseif ($action == 'more') {
         // More of the row
         $sql = "SELECT * FROM loaddetails WHERE id = '$id'";
         $result = $conn->query($sql);
@@ -219,6 +234,7 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
                         <form action='' method='post' class='deleteBtn' onsubmit=\"confirmDelete(event)\">
                             <input type='hidden' name='action' value='delete'>
                             <input type='hidden' name='id' value='" . $id . "'>
+                            <input type='hidden' name='img_srcs' value='". htmlspecialchars($more['img_srcs'], ENT_QUOTES, 'UTF-8') ."'>
                             <button type='submit'>Delete</button>
                         </form>
                     </div>

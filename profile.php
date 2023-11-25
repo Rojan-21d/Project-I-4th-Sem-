@@ -76,7 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errors[] = "PHP Failed to upload the new image";
                 }
             }            
-        }
         } else {
         $updateSql = "UPDATE $table SET";
     }
@@ -87,7 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $updateSql .= ", password = '$hashedPassword'";
     }
-        
+    
+    $updateSql = rtrim($updateSql, ',');
     $updateSql .= " WHERE id = " . $_SESSION['id'];
     
     if ($conn->query($updateSql) === TRUE) {
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($uploadedFilePath)) {
                 $_SESSION['profilePic'] = $uploadedFilePath;
             }
-            
+            // Success, redirect to profile with success parameter
             header("Location: profile.php?success=1");
             exit;
         } else {
@@ -111,8 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($errors)) {
         $errorMessages = implode("<br>", $errors);
         echo '<div class="error-message">' . $errorMessages . '</div>';
-    }
-    
+    }   
+}
 ?>
 
 <!DOCTYPE html>
@@ -250,5 +250,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
-
-}
