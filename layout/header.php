@@ -33,10 +33,12 @@
                         <img src="img/defaultImg/home.png">
                         <p>Home</p>                      
                     </a>
+                    <?php if($_SESSION['usertype'] == 'carrier'){?>
                     <a href="history.php" class="sub-menu-link">
                         <img src="img/defaultImg/setting.png">
                         <p>History</p>                      
                     </a>
+                    <?php } ?>
                     <a href="backend/logoutmodule.php" class="sub-menu-link">
                         <img src="img/defaultImg/logout.png">
                         <p>Logout</p>                      
