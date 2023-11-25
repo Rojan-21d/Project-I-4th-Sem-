@@ -6,6 +6,18 @@
 <title>Home-Consignor</title>
 
 <?php
+// Check if the session has not started, then start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if the user is not logged in
+if(!isset($_SESSION['email'])) {
+    // Redirect the user to the login page or any other authentication page
+    header("Location: ../login.php");
+    exit;
+}
+
 $sql = "SELECT * FROM loaddetails WHERE consignor_id = '" . $_SESSION['id'] . "' ORDER BY dateofpost DESC";
 $result = $conn->query($sql);
 ?>

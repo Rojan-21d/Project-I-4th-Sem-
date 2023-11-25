@@ -1,4 +1,14 @@
 <?php
+// Check if the session has not started, then start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+// Check if the user is not logged in
+if(!isset($_SESSION['email'])) {
+    // Redirect the user to the login page or any other authentication page
+    header("Location: ../login.php");
+    exit;
+}
 $carrier_id = $_SESSION['id'];
 
 $sql = "SELECT ld.*, cd.name AS consignor_name, cd.img_srcs AS consignor_img, cd.email AS consignor_email

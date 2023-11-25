@@ -1,3 +1,15 @@
+<?php
+// Check if the session has not started, then start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+// Check if the user is not logged in
+if(!isset($_SESSION['email'])) {
+    // Redirect the user to the login page or any other authentication page
+    header("Location: ../login.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +27,6 @@
             <div class="nav__links">
                     <img src="<?php echo $_SESSION['profilePic'] ?>" onclick='toggleMenu()'>
             </div>
-            
-
             <!-- dropdown -->
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">

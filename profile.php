@@ -2,8 +2,10 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-session_start();
-$errors = [];
+// Check if the session has not started, then start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}$errors = [];
 
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");

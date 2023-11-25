@@ -9,6 +9,17 @@
 </head>
 <body>
 <?php
+// Check if the session has not started, then start the session
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+// Check if the user is not logged in
+if(!isset($_SESSION['email'])) {
+    // Redirect the user to the login page or any other authentication page
+    header("Location: ../login.php");
+    exit;
+}
+
 if (isset($_POST['action']) && isset($_POST['load_id']) && isset($_POST['consignor_id']) && isset($_POST['carrier_id'])) {
     $load_id = $_POST['load_id'];
     require 'databaseconnection.php';
