@@ -21,9 +21,8 @@ if (isset($_POST['signupBtn'])) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format";
     }
-
-    $reName = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
-    if(!preg_match($reName, $name)){
+    $reNameRegEx = '/^[A-Z][a-z]* [A-Z][a-z]*$/';
+    if(!preg_match($reNameRegEx, $name)){
         $errors[] = "Name must be like Rojan Dumaru";
     }
 

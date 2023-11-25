@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 
-    $reNameRegEx = '/^[A-Z][a-z]+ [A-Z][a-z]+$/';
+    $reNameRegEx = '/^[A-Z][a-z]* [A-Z][a-z]*$/';
     if (!preg_match($reNameRegEx, $name)) {
         $errors[] = "Name must be like 'Rojan Dumaru'";
     }
