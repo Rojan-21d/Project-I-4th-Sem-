@@ -61,9 +61,13 @@ if (session_status() == PHP_SESSION_NONE) {
                             <td>" . $i . "</td>
                             <td>" . $row['name'] . "</td>
                             <td><img src='" . $row['img_srcs'] . "' > </td>
-                            <td>" . $row['dateofpost'] . "</td>
-                            <td>" . $stat . "</td>
-                            <td>
+                            <td>" . $row['dateofpost'] . "</td><td>";
+                            if ($row['status'] == "booked") {
+                                echo "<p class='status booked'>Booked</p>";
+                            } elseif ($row['status'] == "delivered") {
+                                echo "<p class='status delivered'>Delivered</p>";
+                            }
+                            echo"</td><td>
                                 <div class='td-center'>
                                     <form action='backend/moredeleteload.php' method='post' class='moreBtn'>
                                         <input type='hidden' name='action' value='more'>
