@@ -1,3 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   -->
+    <script src="js/sweetalert.js"></script>
+    <script src="js/imageValidation.js"></script>
+    <!-- <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script> -->
+    <script src="js/fontAwesome.js"></script>
+    <link rel="stylesheet" href="css/registration.css">
+    <link rel="stylesheet" href="css/sweetAlert.css">
+    <title>Gantabya - Sign up</title>
+</head>
+<body>
+    
 <?php
 $errors = array(); // A single array to store all validation errors
 
@@ -15,24 +32,24 @@ if (isset($_POST['signupBtn'])) {
 
     // Validate form inputs
     if (empty($name) || empty($email) || empty($contact) || empty($address) || empty($password)) {
-        $errors[] = "All fields are required";
+        $errors[] = "PHP All fields are required";
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format";
+        $errors[] = "PHP Invalid email format";
     }
 
     $reNameRegEx = '/^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/';
     if(!preg_match($reNameRegEx, $name)){
-        $errors[] = "Name must be like Rojan Dumaru";
+        $errors[] = "PHP Name must be like Rojan Dumaru";
     }
 
     if (strlen($password) < 8 || strlen($password) > 24) {
-        $errors[] = "Password must be between 8 and 24 characters";
+        $errors[] = "PHP Password must be between 8 and 24 characters";
     }
 
     if (strlen($contact) !== 10) {
-        $errors[] = "Contact Number Length must be 10";
+        $errors[] = "PHP Contact Number Length must be 10";
     }
 
     // Uniqye Key Email Validation 
@@ -111,22 +128,7 @@ if (!empty($errors)) {
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   -->
-    <script src="js/sweetalert.js"></script>
-    <script src="js/imageValidation.js"></script>
-    <!-- <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script> -->
-    <script src="js/fontAwesome.js"></script>
-    <link rel="stylesheet" href="css/registration.css">
-    <link rel="stylesheet" href="css/sweetAlert.css">
-    <title>Gantabya - Sign up</title>
-</head>
-<body>
+
     <div class="container">
         <div class="form-box">
             <div class="topic">
@@ -152,7 +154,7 @@ if (!empty($errors)) {
                     </div>
                 </div>
                 <div class="input-section">
-                    <form method="post" action="" class="login" enctype="multipart/form-data" onsubmit="return validateForm();" autocomplete="off">
+                    <form method="post" action="" class="login" enctype="multipart/form-data" autocomplete="off">
                         <div class="input-group">
                             <div class="input-field">
                                 <i class="fa-solid fa-user left"></i>
@@ -212,7 +214,66 @@ if (!empty($errors)) {
         </div>
     </div>
     <script src="js/imgPreview.js"></script>
-    <script src="js/formValidation.js"></script>
+    <!-- <script src="js/formValidation.js"></script> -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+        if (!validateForm()) {
+            event.preventDefault();
+        }
+        });
+        function validateForm() {
+    var errors = [];
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var phone = document.getElementById("phone").value;
+    
+    var reName = /^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/;
+    if (!reName.test(name)) {
+        errors.push("Name must be like 'Rojan Dumaru'");
+    }
+    
+    if (name === "") {
+        errors.push("Name is required.");
+    }
+    
+    if (email === "") {
+        errors.push("Email is required.");
+    } else if (!validateEmail(email)) {
+        errors.push("Invalid email format.");
+    }
+    
+    if (password === "") {
+        errors.push("Password is required.");
+    } else if (password.length < 8 || password.length > 24) {
+        errors.push("Password must be between 8 and 24 characters.");
+    }
+    
+    if (phone === "") {
+        errors.push("Phone number is required.");
+    } else if (phone.length !== 10) {
+        errors.push("Phone number must be 10 digits.");
+    }
+    
+    // Display errors using SweetAlert with bullet points
+    if (errors.length > 0) {
+        var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
+        Swal.fire({
+            icon: 'error',
+            title: 'Sign Up Error',
+            html: errorMessage,
+            showCloseButton: true,
+        });            
+        return false;
+    }
+    
+    return true;
+}
+function validateEmail(email) {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+    </script>
     <script src="js/showpwd.js"></script>
 </body>
 </html>

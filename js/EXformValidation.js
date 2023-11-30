@@ -1,5 +1,10 @@
 
 // Client-side validation function with SweetAlert integration
+document.querySelector('form').addEventListener('submit', function (event) {
+    if (!validateForm()) {
+        event.preventDefault();
+    }
+});
 function validateForm() {
     var errors = [];
     var name = document.getElementById("name").value;
@@ -8,8 +13,8 @@ function validateForm() {
     var phone = document.getElementById("phone").value;
     
     var reName = /^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/;
-    if(!preg_match(reName, name)){
-        errors.push("Name must be like Rojan Dumaru");
+    if (!reName.test(name)) {
+        errors.push("Name must be like 'Rojan Dumaru'");
     }
     
     if (name === "") {

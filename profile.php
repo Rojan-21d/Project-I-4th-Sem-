@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $reNameRegEx = '/^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/';
     if (!preg_match($reNameRegEx, $name)) {
-        $errors[] = "Name must be like 'Rojan Dumaru'";
+        $errors[] = "PHP Name must be like 'Rojan Dumaru'";
     }
 
     if (empty($name) || empty($email) || empty($contact) || empty($address)) {
