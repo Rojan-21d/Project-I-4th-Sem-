@@ -44,7 +44,7 @@ if (session_status() == PHP_SESSION_NONE) {
                         <th width="5%">Photo</th>
                         <th width="10%">Date of Uploaded</th>
                         <th width="15%">Status</th>
-                        <th width="20%">Action</th>
+                        <th width="10%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,18 +69,8 @@ if (session_status() == PHP_SESSION_NONE) {
                                         <input type='hidden' name='action' value='more'>
                                         <input type='hidden' name='id' value='" . $load_id . "'>
                                         <input type='hidden' name='shipment_id' value='" . $shipment_id . "'>
-                                        <button type='submit'>More</button>
+                                        <button type='submit' id='more'>More</button>
                                     </form>";
-                        
-                        if ($stat !== 'Delivered') {
-                            echo "<form action='backend/moredeleteload.php' method='post' class='cancelBtn' onsubmit=\"confirmCancel(event)\">
-                                    <input type='hidden' name='action' value='cancel'>
-                                    <input type='hidden' name='id' value='" . $load_id . "'>
-                                    <input type='hidden' name='shipment_id' value='" . $shipment_id . "'>
-                                    <button type='submit'>Cancel</button>
-                                </form>";
-                        }
-                        
                         echo "</div>
                             </td>
                         </tr>";

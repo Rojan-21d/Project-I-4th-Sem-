@@ -49,6 +49,8 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
     if ($action == 'delete') {
         // Delete the row
         $sql = "DELETE FROM loaddetails WHERE id = '$id'";
+        $sql2 = "DELETE FROM shipment WHERE load_id = '$id'";
+        $conn->query($sql2);
         $img_srcs = $_POST['img_srcs'];
         if (file_exists("../".$img_srcs) && strpos($img_srcs, 'defaultImg') == false){
             unlink("../".$img_srcs);
