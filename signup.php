@@ -21,7 +21,8 @@ if (isset($_POST['signupBtn'])) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format";
     }
-    $reNameRegEx = '/^[A-Z][a-z]* [A-Z][a-z]*$/';
+
+    $reNameRegEx = '/^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/';
     if(!preg_match($reNameRegEx, $name)){
         $errors[] = "Name must be like Rojan Dumaru";
     }
@@ -40,7 +41,6 @@ if (isset($_POST['signupBtn'])) {
     if ($result_check_mail->num_rows > 0){
         $errors[] = "Email Already Registered";
     }
-
 
     // ... Image upload validation ...
     if (!empty($_FILES['profile_pic']['name'])) {
@@ -120,7 +120,8 @@ if (!empty($errors)) {
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>   -->
     <script src="js/sweetalert.js"></script>
     <script src="js/imageValidation.js"></script>
-    <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/7b1b8b2fa3.js" crossorigin="anonymous"></script> -->
+    <script src="js/fontAwesome.js"></script>
     <link rel="stylesheet" href="css/registration.css">
     <link rel="stylesheet" href="css/sweetAlert.css">
     <title>Gantabya - Sign up</title>

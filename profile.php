@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 
-    $reNameRegEx = '/^[A-Z][a-z]* [A-Z][a-z]*$/';
+    $reNameRegEx = '/^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/';
     if (!preg_match($reNameRegEx, $name)) {
         $errors[] = "Name must be like 'Rojan Dumaru'";
     }
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         var password = document.getElementById("password").value;
         var phone = document.getElementById("contact").value;
 
-        var reName = /^[A-Z][a-z]+ [A-Z][a-z]+$/;
+        var reName = /^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/;
         if (!reName.test(name)) {
             errors.push("Name must be like 'Rojan Dumaru'");
         }
