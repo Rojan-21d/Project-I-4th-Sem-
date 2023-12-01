@@ -133,11 +133,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             if ($stmt->execute()) {
                 showAlert('Updated Successfully', 'success');
             } else {
-                showAlert('Update Failed: ' . $stmt->error);                
+                showAlert('Update Failed: ' . 'error');                
             }
             $stmt->close();
         } else {
-            showAlert('Update Query Preparation Failed: ' . $conn->error);            
+            showAlert('Update Query Preparation Failed: ' . 'error');            
         }
     }
 }
