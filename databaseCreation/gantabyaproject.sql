@@ -27,7 +27,9 @@ SET time_zone = "+00:00";
 -- Table structure for table `admininfo`
 --
 
-CREATE TABLE `admininfo` (
+CREATE Database IF NOT EXISTS `gantabyaproject`;
+
+CREATE TABLE IF NOT EXISTS `admininfo` (
   `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -48,7 +50,7 @@ INSERT INTO `admininfo` (`id`, `username`, `email`, `contact`, `password`) VALUE
 -- Table structure for table `carrierdetails`
 --
 
-CREATE TABLE `carrierdetails` (
+CREATE TABLE IF NOT EXISTS `carrierdetails` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `img_srcs` varchar(255) NOT NULL DEFAULT 'img/images/user-regular.png',
@@ -66,7 +68,7 @@ CREATE TABLE `carrierdetails` (
 -- Table structure for table `consignordetails`
 --
 
-CREATE TABLE `consignordetails` (
+CREATE TABLE IF NOT EXISTS `consignordetails` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `img_srcs` varchar(255) NOT NULL DEFAULT 'img/images/user-regular.png',
@@ -84,7 +86,7 @@ CREATE TABLE `consignordetails` (
 -- Table structure for table `loaddetails`
 --
 
-CREATE TABLE `loaddetails` (
+CREATE TABLE IF NOT EXISTS `loaddetails` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `dateofpost` datetime DEFAULT current_timestamp(),
@@ -104,7 +106,7 @@ CREATE TABLE `loaddetails` (
 -- Table structure for table `shipment`
 --
 
-CREATE TABLE `shipment` (
+CREATE TABLE IF NOT EXISTS `shipment` (
   `id` int(11) NOT NULL,
   `load_id` int(11) NOT NULL,
   `consignor_id` int(11) NOT NULL,
