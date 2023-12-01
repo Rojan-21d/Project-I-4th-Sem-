@@ -23,7 +23,7 @@ require 'backend/databaseconnection.php';
 
 if (isset($_POST['signupBtn'])) {
     $name = $_POST['name'];
-    $email = strtolower($_POST['email']);
+    $email = s$_POST['email'];
     $contact = $_POST['phone'];
     $address = $_POST['address'];
     $password = $_POST['password'];

@@ -5,7 +5,8 @@ ini_set('display_errors', 1);
 // Check if the session has not started, then start the session
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
-}$errors = [];
+}
+$errors = [];
 
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");
@@ -32,7 +33,7 @@ if ($result && $result->num_rows > 0) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
     $contact = trim($_POST['contact']);
-    $email = strtolower(trim($_POST['email']));
+    $email = trim($_POST['email']);
     $address = trim($_POST['address']);
     $newPassword = $_POST['password'];
 
