@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Check if the session has not started, then start the session
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -53,10 +50,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($newPassword) && (strlen($newPassword) < 8 || strlen($newPassword) > 24)) {
         $errors[] = "PHP Password must be between 8 and 24 characters";
     }
-
-    if (strlen($contact) !== 10) {
-        $errors[] = "PHP Contact Number Length must be 10";
-    }
+    if (!is_numeric($contact)){
+        $errors[] = "Contact must be a numeric value.";
+        if (strlen($contact) !== 10) {
+            $errors[] = "PHP Contact Number Length must be 10";
+        }
+    }   
 
     if (empty($errors)) {
         if (!empty($_FILES['profile_pic']['name'])) {
@@ -216,8 +215,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        if (phone.trim() === "") {
-            errors.push("Phone number is required.");
+        if (phone === "") {
+        errors.push("Phone number is required.");
+        } else if (isNaN(phone)) {
+            errors.push("Phone number must be numeric.");
+            
         } else if (phone.length !== 10) {
             errors.push("Phone number must be 10 digits.");
         }

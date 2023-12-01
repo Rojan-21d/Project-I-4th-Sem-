@@ -23,7 +23,7 @@ require 'backend/databaseconnection.php';
 
 if (isset($_POST['signupBtn'])) {
     $name = $_POST['name'];
-    $email = s$_POST['email'];
+    $email = $_POST['email'];
     $contact = $_POST['phone'];
     $address = $_POST['address'];
     $password = $_POST['password'];
@@ -48,10 +48,12 @@ if (isset($_POST['signupBtn'])) {
         $errors[] = "PHP Password must be between 8 and 24 characters";
     }
 
-    if (strlen($contact) !== 10) {
-        $errors[] = "PHP Contact Number Length must be 10";
-    }
-
+    if (!is_numeric($contact)){
+        $errors[] = "Contact must be a numeric value.";
+        if (strlen($contact) !== 10) {
+            $errors[] = "PHP Contact Number Length must be 10";
+        }
+    }   
     // Uniqye Key Email Validation 
     $sql_check_mail = "SELECT * FROM $table WHERE email = '$email'";
     $result_check_mail = $conn->query($sql_check_mail);
@@ -88,13 +90,6 @@ if (isset($_POST['signupBtn'])) {
         if (!$stmt) {
             $errors[] = "Error in database connection.";
         } else {
-            // Sanitize user inputs
-            $name = mysqli_real_escape_string($conn, $name);
-            $email = mysqli_real_escape_string($conn, $email);
-            $contact = mysqli_real_escape_string($conn, $contact);
-            $address = mysqli_real_escape_string($conn, $address);
-            $password = mysqli_real_escape_string($conn, $password);
-
             // Hashing password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -177,7 +172,7 @@ if (!empty($errors)) {
                         <div class="input-group">
                             <div class="input-field">
                                 <i class="fa-solid fa-phone left"></i>
-                                <input type="text" placeholder="Phone *" name="phone" id="phone" required>
+                                <input type="tel" placeholder="Phone *" name="phone" id="phone" required>
                             </div>
                         </div>
                         <div class="input-group">
@@ -222,57 +217,59 @@ if (!empty($errors)) {
         }
         });
         function validateForm() {
-    var errors = [];
-    var name = document.getElementById("name").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var phone = document.getElementById("phone").value;
-    
-    var reName = /^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/;
-    if (!reName.test(name)) {
-        errors.push("Name must be like 'Rojan Dumaru'");
-    }
-    
-    if (name === "") {
-        errors.push("Name is required.");
-    }
-    
-    if (email === "") {
-        errors.push("Email is required.");
-    } else if (!validateEmail(email)) {
-        errors.push("Invalid email format.");
-    }
-    
-    if (password === "") {
-        errors.push("Password is required.");
-    } else if (password.length < 8 || password.length > 24) {
-        errors.push("Password must be between 8 and 24 characters.");
-    }
-    
-    if (phone === "") {
-        errors.push("Phone number is required.");
-    } else if (phone.length !== 10) {
-        errors.push("Phone number must be 10 digits.");
-    }
-    
-    // Display errors using SweetAlert with bullet points
-    if (errors.length > 0) {
-        var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
-        Swal.fire({
-            icon: 'error',
-            title: 'Sign Up Error',
-            html: errorMessage,
-            showCloseButton: true,
-        });            
-        return false;
-    }
-    
-    return true;
-}
-function validateEmail(email) {
-        var re = /\S+@\S+\.\S+/;
-        return re.test(email);
-    }
+            var errors = [];
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var phone = document.getElementById("phone").value;
+            
+            var reName = /^[A-Z][a-zA-Z]*(?: [A-Z][a-zA-Z]*)*$/;
+            if (!reName.test(name)) {
+                errors.push("Name must be like 'Rojan Dumaru'");
+            }
+            
+            if (name === "") {
+                errors.push("Name is required.");
+            }
+            
+            if (email === "") {
+                errors.push("Email is required.");
+            } else if (!validateEmail(email)) {
+                errors.push("Invalid email format.");
+            }
+            
+            if (password === "") {
+                errors.push("Password is required.");
+            } else if (password.length < 8 || password.length > 24) {
+                errors.push("Password must be between 8 and 24 characters.");
+            }
+            
+            if (phone === "") {
+                errors.push("Phone number is required.");
+            } else if (isNaN(phone)) {
+                errors.push("Phone number must be numeric.");
+            } else if (phone.length !== 10) {
+                errors.push("Phone number must be 10 digits.");
+            }
+            
+            // Display errors using SweetAlert with bullet points
+            if (errors.length > 0) {
+                var errorMessage = `<div class="error-list">${errors.map(error => `• ${error}`).join("<br>")}</div>`;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Sign Up Error',
+                    html: errorMessage,
+                    showCloseButton: true,
+                });            
+                return false;
+            }
+            
+            return true;
+        }
+        function validateEmail(email) {
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            }
     </script>
     <script src="js/showpwd.js"></script>
 </body>

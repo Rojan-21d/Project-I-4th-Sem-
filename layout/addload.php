@@ -104,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             // Handle database insertion error
-            // echo "<p>Error: " . $conn->error . "</p>";
             echo '<script>
             Swal.fire({
                 icon: "error",

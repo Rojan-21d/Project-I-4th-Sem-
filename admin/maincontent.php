@@ -34,16 +34,16 @@ $loadSelected = isset($_POST['load']) ? 'selected' : '';
 // Retrieve the selected button from the URL parameter
 $selectedButton = isset($_GET['selected']) ? $_GET['selected'] : '';
 
-// Determine which button was selected and set the corresponding class
+// Determine which button was selected and set the table
 if ($selectedButton === 'carrier') {
     $carrierSelected = 'selected';
-    $table = 'carrierdetails'; // Set the appropriate table based on the selected button
+    $table = 'carrierdetails'; 
 } elseif ($selectedButton === 'consignor') {
     $consignorSelected = 'selected';
-    $table = 'consignordetails'; // Set the appropriate table based on the selected button
+    $table = 'consignordetails';
 } elseif ($selectedButton === 'load') {
     $loadSelected = 'selected';
-    $table = 'loaddetails'; // Set the appropriate table based on the selected button
+    $table = 'loaddetails';
 } else {
     $carrierSelected = 'selected';
     $table = 'carrierdetails';
@@ -69,8 +69,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id
         showAlert("Deleted Successfully.", "success");
     }
 }
-
-
 ?>
 
 <div class="admin-main">
