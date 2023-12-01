@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE Database IF NOT EXISTS `gantabyaproject`;
+USE `gantabyaproject`;
 
 CREATE TABLE IF NOT EXISTS `admininfo` (
   `id` int(11) NOT NULL,
